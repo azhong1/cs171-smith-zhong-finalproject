@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<head>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+  <style type="text/css">
+    rect {
+        fill:teal;
+        fill-opacity:.8;
+    }
+  </style>
+</head>
+<body>
+  <script type="text/javascript">
+  
+  d3.xml("data/countries_co2.xml", function(data) {
+  
+    data.forEach(function(d){console.log(d)})
+
+  });
+  </script>
+</body>
+</html>
