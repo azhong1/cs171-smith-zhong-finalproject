@@ -18,10 +18,25 @@
   clean_data = []
 
   data.Root.data.record.forEach(function(d){
-    console.log(d.field[0]["__text"])
-    }
+    if("__text" in d.field[3]){
+    var country_name = d.field[0]["__text"]
+    var country_id = d.field[0]["_key"]
+    var year = d.field[2]["__text"]
+    var emissions = d.field[3]["__text"]
 
-  )
+    clean_data.push({
+        "name": country_name,
+        "year": year,
+        "emissions": emissions,
+        "country_id": country_id
+
+    })
+    }
+    });
+
+    console.log(clean_data)
+
+  
 
   });
   </script>
