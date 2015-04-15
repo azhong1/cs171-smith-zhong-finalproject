@@ -13,9 +13,15 @@
 <body>
   <script type="text/javascript">
   
-  d3.xml("data/countries_co2.xml", function(data) {
+  d3.json("data/countries_co2_raw_data.json", function(data) {
   
-    data.forEach(function(d){console.log(d)})
+  clean_data = []
+
+  data.Root.data.record.forEach(function(d){
+    console.log(d.field[0]["__text"])
+    }
+
+  )
 
   });
   </script>
