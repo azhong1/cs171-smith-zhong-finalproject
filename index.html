@@ -94,9 +94,10 @@
                 if (!error) {
 
 
-                function flatData (data, param){
+                function flatData (data){
 
-                      var clean_data = []
+                      var clean = []
+
 
 
                       data.Root.data.record.forEach(function(d){
@@ -107,23 +108,19 @@
                         var par = d.field[3]["__text"]
 
 
-                        clean_data.push({
+                        clean.push({
                             "name": country_name,
                             "year": year,
-                            param : par,
+                            "param" : par,
                             "country_id": country_id
 
                         })
                         }})
-
-                          return clean_data
-
-                    }
-                        var clean_co2 = flatData(_data, "emissions")
-                        var clean_gdp = flatData(_gdpdata, "gdp")
-                        var clean_pop = flatData(_popdata, "pop")
-
-                        console.log(clean_co2)
+                      return clean
+                     }
+                        var clean_co2 = flatData(_data)
+                        var clean_gdp = flatData(_gdpdata)
+                        var clean_pop = flatData(_popdata)
 
                         var c_array = []
                         var id_array = []
@@ -142,13 +139,22 @@
                         scale.domain(d3.range(1960, 2014))
                         scale.range(d3.range(0, 53))
 
-                        console.log(c_array)
+
+
+                        c_array.forEach(function(d, i){
 
                         var emptyarray = d3.range(53).map(function () {
                               return -1; 
                           })
 
-                        c_array.forEach(function(d, i){
+                        var emptyarray2 = d3.range(53).map(function () {
+                              return -1; 
+                          })
+
+                        var emptyarray3 = d3.range(53).map(function () {
+                              return -1; 
+                          })
+
                
                          var lon = -1
                          var lat = -1
@@ -163,42 +169,42 @@
                             "name": d,
                             "country_id": id_array[i],
                             "years": emptyarray,
-                            "gdp": emptyarray,
-                            "pop": emptyarray,
+                             "gdp": emptyarray2,
+                             "pop": emptyarray3,
                             "longitude": lon,
                             "latitude": lat
                           })
                         });
 
-                        console.log(clean_co2)
+                        // console.log(clean_co2)
                      
                         clean_co2.forEach(function(d){
-                            console.log(d)
                           for (var i = 0; i < cleanest_data.length ; i++){
                             if (cleanest_data[i].name == d.name){
-                                console.log(cleanest_data[i])
-                              cleanest_data[i]["years"][scale(d.year)] = d.param
+                              cleanest_data[i].years[scale(d.year)] = d.param
                             }
                           }
                         })
 
-                        // clean_gdp.forEach(function(d){
-                        //   for (var i = 0; i < cleanest_data.length ; i++){
-                        //     if (cleanest_data[i].name == d.name){
-                        //       cleanest_data[i]["gdp"][scale(d.year)] = d.param
-                        //     }
-                        //   }
-                        // })
+                        clean_gdp.forEach(function(d){
+                          for (var i = 0; i < cleanest_data.length ; i++){
+                            if (cleanest_data[i].name == d.name){
+                              cleanest_data[i]["gdp"][scale(d.year)] = d.param
+                            }
+                          }
+                        })
 
-                        // clean_pop.forEach(function(d){
-                        //   for (var i = 0; i < cleanest_data.length ; i++){
-                        //     if (cleanest_data[i].name == d.name){
-                        //         // console.log(cleanest_data[i]["years"][scale(d.year)])
-                        //         // console.log(cleanest_data[i]["pop"][scale(d.year)])
-                        //       cleanest_data[i]["pop"][scale(d.year)] = d.param
-                        //     }
-                        //   }
-                        // })
+                        clean_pop.forEach(function(d){
+                          for (var i = 0; i < cleanest_data.length ; i++){
+                            if (cleanest_data[i].name == d.name){
+                                // console.log(cleanest_data[i]["years"][scale(d.year)])
+                                // console.log(cleanest_data[i]["pop"][scale(d.year)])
+                              cleanest_data[i]["pop"][scale(d.year)] = d.param
+                            }
+                          }
+                        })
+
+                        console.log(cleanest_data)
 
                   co2Data = cleanest_data
                                     
