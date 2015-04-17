@@ -4,7 +4,6 @@
 <head>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
-<script src="datamaps/dist/datamaps.world.min.js"></script>
   <style type="text/css">
     rect {
         fill:teal;
@@ -15,7 +14,6 @@
 <body>
   <div id="container" style="position: relative; width: 1000px; height: 500px;"></div>
   <script type="text/javascript">
-  var map = new Datamap({element: document.getElementById('container')});
   d3.json("data/countries_co2_raw_data.json", function(data) {
   
   clean_data = []
@@ -34,14 +32,47 @@
         "country_id": country_id
 
     })
-    }
+    }})
     
-    
-    
-    console.log(clean_data)
+    var c_array = []
+    var id_array = []
 
-  
+    clean_data.forEach(function(d){
+      if (c_array.indexOf(d.name) == -1){
+        c_array.push(d.name)
+        id_array.push(d.country_id)
+      }
+    })
 
+    var cleanest_data = []
+
+    var scale = d3.scale.ordinal()
+
+    scale.domain(d3.range(1960, 2014))
+    scale.range(d3.range(0, 53))
+
+    c_array.forEach(function(d, i){
+     var years = d3.range(53).map(function () {
+          return -1; 
+      });
+      cleanest_data.push({
+        "name": d,
+        "country_id": id_array[i],
+        "years": years
+      })
+    });
+
+    console.log(c_array)
+
+    clean_data.forEach(function(d){
+      for (var i = 0; i < cleanest_data.length ; i++){
+        if (cleanest_data[i].name == d.name){
+          cleanest_data[i]["years"][scale(d.year)] = d.emissions
+        }
+      }
+    })
+
+  console.log(cleanest_data)
   });
   </script>
 </body>
