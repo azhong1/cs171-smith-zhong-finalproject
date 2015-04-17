@@ -43,9 +43,9 @@ WorldVis.prototype.initVis = function(){
         //}
         done: function(datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-                
+
             //trigger selection event
-            $(that.eventHandler).trigger("selectionChanged", geography.properties.name);
+            $(that.eventHandler).trigger("selectionChanged", geography.id);
 
             });
         }
