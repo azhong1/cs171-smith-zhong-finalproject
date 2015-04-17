@@ -1,0 +1,30 @@
+body{
+    font-family: 'PT Sans', sans-serif;
+}
+
+
+.boundingBox{
+    cursor: pointer;
+    fill: grey;
+    fill-opacity: .3;
+    pointer-events: all;
+}
+
+.brush{
+    fill: darkgrey;
+    fill-opacity: .5;
+    pointer-events: none;
+}
+
+.label{
+    color: black;
+    font-size: 14px;
+    background-color: lightgrey;
+
+.line{
+    fill: none;
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+}
