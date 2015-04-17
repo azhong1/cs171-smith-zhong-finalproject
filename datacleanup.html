@@ -3,6 +3,7 @@
 <meta charset="utf-8">
 <head>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
   <style type="text/css">
     rect {
@@ -14,8 +15,13 @@
 <body>
   <div id="container" style="position: relative; width: 1000px; height: 500px;"></div>
   <script type="text/javascript">
-  d3.json("data/countries_co2_raw_data.json", function(data) {
   
+
+  var dataLoaded = function (error, _data, _gdpdata, _popdata) {
+    if (!error) {
+
+  function flatData (data, param){
+
   clean_data = []
 
   data.Root.data.record.forEach(function(d){
@@ -28,12 +34,15 @@
     clean_data.push({
         "name": country_name,
         "year": year,
-        "emissions": emissions,
+        param : emissions,
         "country_id": country_id
 
     })
     }})
-    
+}
+    var clean_data = flatData(_data, emissions)
+    var clean_gdp = flatData(_gdpdata, gdp)
+    var clean_pop = flatData(_popdata, pop)
     var c_array = []
     var id_array = []
 
@@ -58,11 +67,12 @@
       cleanest_data.push({
         "name": d,
         "country_id": id_array[i],
-        "years": years
+        "years": years,
+        "gdp": years,
+        "pop": years,
       })
     });
 
-    console.log(c_array)
 
     clean_data.forEach(function(d){
       for (var i = 0; i < cleanest_data.length ; i++){
@@ -72,8 +82,42 @@
       }
     })
 
+    clean_gdp.forEach(function(d){
+      for (var i = 0; i < cleanest_data.length ; i++){
+        if (cleanest_data[i].name == d.name){
+          cleanest_data[i]["gdp"][scale(d.year)] = d.gdp
+        }
+      }
+    })
+
+    clean_pop.forEach(function(d){
+      for (var i = 0; i < cleanest_data.length ; i++){
+        if (cleanest_data[i].name == d.name){
+          cleanest_data[i]["pop"][scale(d.year)] = d.pop
+        }
+      }
+    })
+
   console.log(cleanest_data)
-  });
+  }};
+
+   var startHere = function(){
+
+             //load data here and call "dataLoaded" afterwards
+                queue()
+                .defer(d3.json, 'data/countries_co2_raw_data.json')
+                .defer(d3.json, 'data/gdp_raw_data.json')
+                .defer(d3.json, 'data/pop_raw_data.json') 
+                .await(dataLoaded); 
+
+                // bind GDP button to a function
+                    d3.select("#gdpBtn").on("click", function() {
+                        // TODO
+                    
+                    });
+            }
+           
+            startHere();
   </script>
 </body>
 </html>
