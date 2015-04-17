@@ -22,7 +22,8 @@ WorldVis = function(_parentElement, _data, _eventHandler){
  * Method that sets up the SVG and the variables
  */
 WorldVis.prototype.initVis = function(){
-
+    var that = this
+    //console.log(that.data);
 	//append svg element
 	this.svg = this.parentElement.append("svg")
       .attr("width", this.width)
@@ -32,34 +33,61 @@ WorldVis.prototype.initVis = function(){
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
         
-
-    var map = new Datamap({element: document.getElementById('map')}); 
-
+    
+    //instantiate world map
+    this.map = new Datamap({element: document.getElementById('map'),
+        scope: 'world',
+        //geographyConfig: {
+        //    popupOnHover: false,
+        //    highlightOnHover: false
+        //}
+    }); 
 
     //instantiate world totals line plot
-    // this.lineplot = this.svg.append("g")
-    // 	.attr("class", "lineplot")
-    // 	.attr("transform", "translate(25, 400)")
-
     this.addLinePlot(this.svg)
 
     //add slider
     this.addSlider(this.svg)
 
-    // filter, aggregate, modify data
-    this.wrangleData();
+    // filter, aggregate, modify data, calls updateVis
+    this.wrangleData(1962);
 
-    // call the update method
-    this.updateVis();
 }
 
 
 /**
  * Method to wrangle the data. 
   */
-WorldVis.prototype.wrangleData= function(){
+WorldVis.prototype.wrangleData= function(year){
 
-    this.displayData = this.data;
+    var that = this
+
+    this.displayData = [];
+
+    var current_year = year - 1962 //to get the indexing correct
+
+    //scale the bubbles
+    var x = d3.scale.linear()
+        x.domain([0, 7200000])
+        x.range([3, 80])
+
+
+    //wrangle data for bubbles
+    this.data.forEach(function(d){
+        if (d.longitude != -1 && d.latitude != -1){
+            if (d.years[current_year] > 0) {
+                d.radius = x(d.years[current_year])
+            } else {
+                d.radius = 0
+            }
+            
+            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, 
+                "code": d.country_id, "borderWidth": 0, "fillOpacity": 0.5})
+
+        }
+    })
+
+    this.updateVis(year);
 
 }
 
@@ -67,63 +95,19 @@ WorldVis.prototype.wrangleData= function(){
 /**
  * Drawing Method
  */
-WorldVis.prototype.updateVis = function(){
-    var that = this
+WorldVis.prototype.updateVis = function(year){
+    
+    // update circles
+    this.map.bubbles(this.displayData); //, {highlightOnHover: false});
+    //geographyConfig: {
+        //    popupOnHover: false,
+        //    highlightOnHover: false
+        //});
 
-    console.log(that.data)
-    //adding the bubbles
-    var co2 = new Datamap({
-        element: document.getElementById('map'),
-        scope: 'world',
-        geographyConfig: {
-            popupOnHover: false,
-            highlightOnHover: false
-        },
-    });
+    d3.selectAll("circle")
+       .style("fill", "#aaac84");
 
-         var bombs = [{
-            name: 'Joe 4',
-            radius: 25,
-            yield: 400,
-            country: 'USSR',
-            fillKey: 'RUS',
-            significance: 'First fusion weapon test by the USSR (not "staged")',
-            date: '1953-08-12',
-            latitude: 50.07,
-            longitude: 78.43
-          },{
-            name: 'RDS-37',
-            radius: 40,
-            yield: 1600,
-            country: 'USSR',
-            fillKey: 'RUS',
-            significance: 'First "staged" thermonuclear weapon test by the USSR (deployable)',
-            date: '1955-11-22',
-            latitude: 50.07,
-            longitude: 78.43
-
-          },{
-            name: 'Tsar Bomba',
-            radius: 75,
-            yield: 50000,
-            country: 'USSR',
-            fillKey: 'RUS',
-            significance: 'Largest thermonuclear weapon ever tested—scaled down from its initial 100 Mt design by 50%',
-            date: '1961-10-31',
-            latitude: 73.482,
-            longitude: 54.5854
-          }
-        ];
-    //draw bubbles for bombs
-    co2.bubbles(bombs, {
-        popupTemplate: function (geo, data) { 
-                return ['<div class="hoverinfo">' +  data.name,
-                '<br/>Payload: ' +  data.yield + ' kilotons',
-                '<br/>Country: ' +  data.country + '',
-                '<br/>Date: ' +  data.date + '',
-                '</div>'].join('');
-        }
-    });
+    
 
 }
 
@@ -150,11 +134,12 @@ WorldVis.prototype.onSelectionChange= function (selectionStart, selectionEnd){
 WorldVis.prototype.addSlider = function(svg){
     var that = this;
 
+    //console.log(that.data);
     //Scale slider position values to year values
     var sliderScale = d3.scale.linear()
 
     sliderScale.domain([0, 400])
-    sliderScale.rangeRound([1960,2014])
+    sliderScale.rangeRound([1960,2012])
 
     var sliderDragged = function(){
         var value = Math.max(0, Math.min(400,d3.event.x));
@@ -165,9 +150,11 @@ WorldVis.prototype.addSlider = function(svg){
         d3.select(this)
             .attr("x", function () {
                 return value;
+                
             })
 
-        that.updateVis({});
+        that.wrangleData(this.year);
+        
     }
     var sliderDragBehaviour = d3.behavior.drag()
         .on("drag", sliderDragged)
@@ -188,7 +175,7 @@ WorldVis.prototype.addSlider = function(svg){
 
     sliderGroup.append("rect").attr({
         "class":"sliderHandle",
-        x: 400,
+        x: 0,
         width:20,
         height:10,
         rx:2,
@@ -223,7 +210,7 @@ WorldVis.prototype.addLinePlot = function(svg){
     var ymax = Math.max.apply(null, linedata)
     var ymin = d3.min(linedata, function(d){if (d > 0){ return d}})
 
-    console.log(ymax)
+    //console.log(ymax)
 
     y.domain([0, ymax])
     y.range([100, 0])
