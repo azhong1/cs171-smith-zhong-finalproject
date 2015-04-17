@@ -26,10 +26,10 @@ CountryVis.prototype.initVis = function(){
 	this.svg = this.parentElement.append("svg")
       .attr("width", this.width)
         .attr("height", this.height)
-        .style("background-color", "lightred")
+        .style("background-color", "lightcoral")
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
-        
+
     // filter, aggregate, modify data
     this.wrangleData();
 

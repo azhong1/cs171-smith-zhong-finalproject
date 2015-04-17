@@ -55,12 +55,12 @@
             <!--<div class="col-md-1" id="countVis">-->
             <div id="countVis">
                 <!-- TODO: delete placeholder svg element -->
-                <svg width="300" height="250" style="background-color: lightcoral">
+<!--                 <svg width="300" height="250" style="background-color: lightcoral">
                     <text x="50" y="50">HERE should be CountVis</text>
                 </svg>
                 <svg width="300" height="250" style="background-color: lightcoral">
                     <text x="50" y="50">HERE should be CountVis2</text>
-                </svg>
+                </svg> -->
             </div>
         </div>
 
@@ -86,7 +86,7 @@
 
                 //Instantiate Vis Objects
                 var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);   
-                var count_vis = new CountVis(d3.select("#countVis"), engData, MyEventHandler)
+                var count_vis = new CountryVis(d3.select("#countVis"), engData, MyEventHandler)
 
             }
 
