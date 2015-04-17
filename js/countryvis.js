@@ -8,7 +8,7 @@ CountryVis = function(_parentElement, _data){
     this.data = _data;
     this.totalData = null;
     this.altData = null;
-    this.combData = null;
+    this.metaData = null;
 
     // define all "constants" 
     this.margin = {top: 20, right: 0, bottom: 30, left: 70},
@@ -47,6 +47,8 @@ CountryVis.prototype.initVis = function(){
     this.y = d3.scale.linear()
       .range([this.height, 0]);
 
+    this.color = d3.scale.category20();
+
     this.xAxis = d3.svg.axis()
       .scale(this.x)
       .orient("bottom");
@@ -66,13 +68,6 @@ CountryVis.prototype.initVis = function(){
       .y0(this.height)
           .y1(function(d) { return that.y(d)});
 
-    this.nucarea = d3.svg.area()
-      .interpolate("monotone")
-      .x(function(d, i) { return that.x(yearscale(i))})
-      .y0(this.height)
-          .y1(function(d, i) { return that.y(d * that.totalData[i])});
-
-
     //adds visual elements
         // Add axes visual elements
      this.svg.append("g")
@@ -87,6 +82,16 @@ CountryVis.prototype.initVis = function(){
     this.container = this.svg.append("g")
       .attr("class", "area")
       .attr("transform", "translate("+this.margin.left+","+ 0+")")
+
+
+    this.container2 = this.svg.append("g")
+      .attr("class", "area")
+      .attr("transform", "translate("+this.margin.left+","+ 0+")")
+
+    this.container3 = this.svg.append("g")
+      .attr("class", "area")
+      .attr("transform", "translate("+this.margin.left+","+ 0+")")
+
 
 }
 
@@ -107,8 +112,6 @@ CountryVis.prototype.wrangleData= function(_filter){
 CountryVis.prototype.updateVis = function(){
     var that = this ;
 
-    console.log(this.totalData == null)
-
     if (this.totalData == null){
 
         this.svg.selectAll(".x.axis").style("display", "none")
@@ -121,10 +124,11 @@ CountryVis.prototype.updateVis = function(){
 
     else{
 
-
+    this.svg.selectAll(".area").style("display", "")
     this.svg.selectAll(".x.axis").style("display", "")
     this.svg.selectAll(".y.axis").style("display", "")
-    this.svg.selectAll(".area").style("display", "")
+    d3.selectAll(".instr").style("display", "").text("Energy Use for "+ this.metaData +"")
+
     
     var ymax = Math.max.apply(null, that.totalData)
 
@@ -147,18 +151,47 @@ CountryVis.prototype.updateVis = function(){
     path.enter()
       .append("path")
       .attr("class", "area")
-      .attr("fill", "pink")
+      .attr("fill", "blue")
 
     path
       .transition()
-      .attr("d", this.area)
-      // .attr("d", function(d, i){if (i=0) {return this.area} else {return this.nucarea}});
+      .attr("d", this.area);
 
     path.exit()
       .remove();
 
-  }
+    var path2 = this.container2.selectAll(".area")
+        .data([this.combData])
 
+    path2.enter()
+      .append("path")
+      .attr("class", "area")
+      .attr("fill", "green")
+
+    path2
+      .transition()
+      .attr("d", this.area);
+
+    path2.exit()
+        .remove();
+
+    var path3 = this.container3.selectAll(".area")
+        .data([this.altData])
+
+    path3.enter()
+      .append("path")
+      .attr("class", "area")
+      .attr("fill", "pink")
+
+    path3
+      .transition()
+      .attr("d", this.area);
+
+    path3.exit()
+        .remove();
+
+
+  }
 
 }
 
@@ -189,6 +222,7 @@ CountryVis.prototype.filterAndAggregate = function(_filter){
     this.totalData = null;
     this.altData = null;
     this.combData = null;
+    this.metaData = null;
 
     var that = this;
 
@@ -200,11 +234,31 @@ CountryVis.prototype.filterAndAggregate = function(_filter){
     this.data.forEach(function(d){
         if (filter(d)){
         that.totalData = d.total_energy_use
-        that.altData = d.alt_energy_use
-        that.combData = d.comb_energy_use
+        that.altData = fixup(d.alt_energy_use, d.total_energy_use)
+        that.metaData = d.name
+
+        that.combData = fixup(d.comb_energy_use, d.total_energy_use).map(function(d, i){ return d + that.altData[i]})
+        
+        // var array2 = fixup(d.comb_energy_use, d.total_energy_use)
+        // var stacked = [{"name": "alt", "values": array1.map(function(d,i){ return {"x": i, "y": d} })},{"name":"comb", "values": array2.map(function(d, i){
+        //     return {"x": i, "y": d}
+        // })}]
+
+        // that.stackedData = stacked
         }
     })
 
-
+    function fixup (array1, array2){
+        var newarray = []
+        array1.forEach(function(d,i){
+            if (d>0){
+                newarray.push(d*array2[i]/100)
+            }
+            else {
+                newarray.push(-1)
+            }
+        })
+        return newarray
+    }
 
 }
