@@ -86,7 +86,14 @@
 
                 //Instantiate Vis Objects
                 var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);   
-                var count_vis = new CountryVis(d3.select("#countVis"), engData, MyEventHandler)
+                var count_vis = new CountryVis(d3.select("#countVis"), engData);
+
+                // Bind the eventHandler to the Vis Objects
+                $(MyEventHandler).bind("selectionChanged", function(event, selection){
+
+                    count_vis.onSelectionChange(selection);
+
+                })
 
             }
 

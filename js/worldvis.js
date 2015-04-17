@@ -41,6 +41,14 @@ WorldVis.prototype.initVis = function(){
         //    popupOnHover: false,
         //    highlightOnHover: false
         //}
+        done: function(datamap) {
+            datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+                
+            //trigger selection event
+            $(that.eventHandler).trigger("selectionChanged", geography.properties.name);
+
+            });
+        }
     }); 
 
     //instantiate world totals line plot
