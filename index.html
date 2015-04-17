@@ -23,6 +23,7 @@
 
     <!-- add own scripts-->
     <script src = "js/worldvis.js"></script>
+    <script src = "js/countryvis.js"></script>
 
 </head>
 <body>
@@ -49,10 +50,7 @@
 
         <div class="row">
             <div class="col-md-10" id="worldVis">
-                <!-- TODO: delete placeholder svg element -->
-               <!--  <svg width="750" height="600" style="background-color: lightblue">
-                    <text x="50" y="50">HERE should be WorldVis</text>
-                </svg> -->
+
             </div>
             <!--<div class="col-md-1" id="countVis">-->
             <div id="countVis">
@@ -76,6 +74,8 @@
             // variables keeping global knowledge of the data
             var co2Data = [];
 
+            var engData = [];
+
             // see: https://github.com/mbostock/d3/wiki/Time-Formatting
             var dateFormatter = d3.time.format("%Y-%m-%d");
             // call this function after Data is loaded, reformatted and bound to the variables
@@ -85,15 +85,16 @@
                 var MyEventHandler = new Object();
 
                 //Instantiate Vis Objects
-                var count_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);   
+                var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);   
+                var count_vis = new CountVis(d3.select("#countVis"), engData, MyEventHandler)
 
             }
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _data, _gdpdata, _popdata, _longlat) {
+            var dataLoaded = function (error, _data, _gdpdata, _popdata, _longlat, _totaldata, _altdata, _combdata) {
                 if (!error) {
 
-
+                //Function to wrangle raw data 
                 function flatData (data){
 
                       var clean = []
@@ -118,12 +119,19 @@
                         }})
                       return clean
                      }
-                        var clean_co2 = flatData(_data)
-                        var clean_gdp = flatData(_gdpdata)
-                        var clean_pop = flatData(_popdata)
+                    
+                    //Flattened Versions of each dataset
+                    var clean_co2 = flatData(_data)
+                    var clean_gdp = flatData(_gdpdata)
+                    var clean_pop = flatData(_popdata)
+                    var clean_eng = flatData(_totaldata)
+                    var clean_alt = flatData(_altdata)
+                    var clean_comb = flatData(_combdata)
 
-                        var c_array = []
-                        var id_array = []
+                    
+                    //Condense gdp, co2, and population datasets
+                    var c_array = []
+                    var id_array = []
 
                         clean_co2.forEach(function(d){
                           if (c_array.indexOf(d.name) == -1){
@@ -140,22 +148,16 @@
                         scale.range(d3.range(0, 53))
 
 
+                        //create object for each country
+                        c_array.forEach(function(d, i){ 
 
-                        c_array.forEach(function(d, i){
-
-                        var emptyarray = d3.range(53).map(function () {
-                              return -1; 
-                          })
-
-                        var emptyarray2 = d3.range(53).map(function () {
-                              return -1; 
-                          })
-
-                        var emptyarray3 = d3.range(53).map(function () {
-                              return -1; 
-                          })
+                        //create empty arrays to contain gdp, population, and emissions values for each year
+                        var emptyarray = d3.range(53).map(function () {return -1;})
+                        var emptyarray2 = d3.range(53).map(function () {return -1; })
+                        var emptyarray3 = d3.range(53).map(function () {return -1; })
 
                
+                         //extract latitute and logitude data
                          var lon = -1
                          var lat = -1
                          _longlat.data.forEach(function(d){
@@ -176,8 +178,7 @@
                           })
                         });
 
-                        // console.log(clean_co2)
-                     
+                        //Fill values for co2 in each country object, for each year                      
                         clean_co2.forEach(function(d){
                           for (var i = 0; i < cleanest_data.length ; i++){
                             if (cleanest_data[i].name == d.name){
@@ -186,6 +187,7 @@
                           }
                         })
 
+                        //Fill values for gdp in each country object, for each year                      
                         clean_gdp.forEach(function(d){
                           for (var i = 0; i < cleanest_data.length ; i++){
                             if (cleanest_data[i].name == d.name){
@@ -194,6 +196,7 @@
                           }
                         })
 
+                        //Fill values for population in each country object, for each year                      
                         clean_pop.forEach(function(d){
                           for (var i = 0; i < cleanest_data.length ; i++){
                             if (cleanest_data[i].name == d.name){
@@ -204,10 +207,67 @@
                           }
                         })
 
-                        console.log(cleanest_data)
-
+                //Save co2, gdp, population to global variable
                   co2Data = cleanest_data
-                                    
+            
+
+                //Consolodate energy data
+                    var ec_array = []
+                    var eid_array = []
+
+                    clean_eng.forEach(function(d){
+                      if (ec_array.indexOf(d.name) == -1){
+                        ec_array.push(d.name)
+                        eid_array.push(d.country_id)
+                      }
+                    })
+                    
+                    //Array to store consolodated energy data
+                    var cleanest_edata = []
+
+                    //Instantiate one object for each country
+                    ec_array.forEach(function(d, i){
+                     var arr1 = d3.range(53).map(function () {return -1; });
+                     var arr2 = d3.range(53).map(function () {return -1; });
+                     var arr3 = d3.range(53).map(function () {return -1;});
+
+
+                      cleanest_edata.push({
+                        "name": d,
+                        "country_id": eid_array[i],
+                        "total_energy_use": arr1,
+                        "alt_energy_use": arr2,
+                        "comb_energy_use": arr3
+                      })
+                    });
+
+                    //Populate country arrays with values for energy for each year
+                    clean_eng.forEach(function(d){
+                      for (var i = 0; i < cleanest_edata.length ; i++){
+                        if (cleanest_edata[i].name == d.name){
+                          cleanest_edata[i]["total_energy_use"][scale(d.year)] = d.param
+                        }
+                      }
+                    })
+
+                    clean_alt.forEach(function(d){
+                      for (var i = 0; i < cleanest_edata.length ; i++){
+                        if (cleanest_edata[i].name == d.name){
+                          cleanest_edata[i]["alt_energy_use"][scale(d.year)] = d.param
+                        }
+                      }
+                    })
+
+                    clean_comb.forEach(function(d){
+                      for (var i = 0; i < cleanest_edata.length ; i++){
+                        if (cleanest_edata[i].name == d.name){
+                          cleanest_edata[i]["comb_energy_use"][scale(d.year)] = d.param
+                        }
+                      }
+                    })
+
+                    //Store consolodated energy data in global variable
+                    engData = cleanest_edata
 
                   initVis();
                                 }
@@ -220,6 +280,10 @@
                 .defer(d3.json, 'data/gdp_raw_data.json')
                 .defer(d3.json, 'data/pop_raw_data.json')
                 .defer(d3.json, 'data/long_lat.json')
+                .defer(d3.json, 'data/energy_use_ktoil_raw_data.json')
+                .defer(d3.json, 'data/alt_nuc_eng_raw_data.json')
+                .defer(d3.json, 'data/combust_renew_raw_data.json')
+
                 .await(dataLoaded);
 
                 // bind GDP button to a function
