@@ -10,7 +10,7 @@ WorldVis = function(_parentElement, _data, _eventHandler){
 
     // define all "constants" 
     this.margin = {top: 20, right: 0, bottom: 30, left: 70},
-    this.width = 750 
+    this.width = 1100 
     this.height = 600
     this.year = 1960
 
@@ -26,10 +26,14 @@ WorldVis.prototype.initVis = function(){
 	//append svg element
 	this.svg = this.parentElement.append("svg")
       .attr("width", this.width)
-        .attr("height", this.height)
-        .style("background-color", "lightblue")
+      .attr("id", "map")
+      .attr("height", this.height)
+        //.style("background-color", "lightblue")
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+        
+
+    var map = new Datamap({element: document.getElementById('map')}); 
 
 
     //instantiate world totals line plot
@@ -64,7 +68,62 @@ WorldVis.prototype.wrangleData= function(){
  * Drawing Method
  */
 WorldVis.prototype.updateVis = function(){
+    var that = this
 
+    console.log(that.data)
+    //adding the bubbles
+    var co2 = new Datamap({
+        element: document.getElementById('map'),
+        scope: 'world',
+        geographyConfig: {
+            popupOnHover: false,
+            highlightOnHover: false
+        },
+    });
+
+         var bombs = [{
+            name: 'Joe 4',
+            radius: 25,
+            yield: 400,
+            country: 'USSR',
+            fillKey: 'RUS',
+            significance: 'First fusion weapon test by the USSR (not "staged")',
+            date: '1953-08-12',
+            latitude: 50.07,
+            longitude: 78.43
+          },{
+            name: 'RDS-37',
+            radius: 40,
+            yield: 1600,
+            country: 'USSR',
+            fillKey: 'RUS',
+            significance: 'First "staged" thermonuclear weapon test by the USSR (deployable)',
+            date: '1955-11-22',
+            latitude: 50.07,
+            longitude: 78.43
+
+          },{
+            name: 'Tsar Bomba',
+            radius: 75,
+            yield: 50000,
+            country: 'USSR',
+            fillKey: 'RUS',
+            significance: 'Largest thermonuclear weapon ever tested—scaled down from its initial 100 Mt design by 50%',
+            date: '1961-10-31',
+            latitude: 73.482,
+            longitude: 54.5854
+          }
+        ];
+    //draw bubbles for bombs
+    co2.bubbles(bombs, {
+        popupTemplate: function (geo, data) { 
+                return ['<div class="hoverinfo">' +  data.name,
+                '<br/>Payload: ' +  data.yield + ' kilotons',
+                '<br/>Country: ' +  data.country + '',
+                '<br/>Date: ' +  data.date + '',
+                '</div>'].join('');
+        }
+    });
 
 }
 
@@ -115,7 +174,7 @@ WorldVis.prototype.addSlider = function(svg){
 
     var sliderGroup = svg.append("g").attr({
         class:"sliderGroup",
-        "transform":"translate("+25+","+500+")"
+        "transform":"translate("+400+","+550+")"
     })
 
     sliderGroup.append("rect").attr({
@@ -148,7 +207,7 @@ WorldVis.prototype.addLinePlot = function(svg){
     
     var lineGroup = svg.append("g").attr({
         class:"lineGroup",
-        "transform":"translate("+30+","+400+")"
+        "transform":"translate("+400+","+450+")"
     })
 
     var linedata = []
@@ -162,7 +221,7 @@ WorldVis.prototype.addLinePlot = function(svg){
     var y = d3.scale.linear()
 
     var ymax = Math.max.apply(null, linedata)
-    var ymin = d3.min(linedata, function(d){if (d > 0){ console.log(d); return d}})
+    var ymin = d3.min(linedata, function(d){if (d > 0){ return d}})
 
     console.log(ymax)
 

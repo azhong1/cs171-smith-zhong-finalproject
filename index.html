@@ -5,11 +5,12 @@
     <title>CS171 Final Project</title>
 
     <!-- ADD Libraries-->
-    <script src="libs/d3/d3.min.js" charset="utf-8"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
     <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
     <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
-
+    <script src="dm/dist/datamaps.world.min.js"></script>
 
     <!--Stylesheets-->
     <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
@@ -47,17 +48,18 @@
 
 
         <div class="row">
-            <div class="col-md-8" id="worldVis">
+            <div class="col-md-10" id="worldVis">
                 <!-- TODO: delete placeholder svg element -->
                <!--  <svg width="750" height="600" style="background-color: lightblue">
                     <text x="50" y="50">HERE should be WorldVis</text>
                 </svg> -->
             </div>
-            <div class="col-md-2" id="countVis">
+            <!--<div class="col-md-1" id="countVis">-->
+            <div id="countVis">
                 <!-- TODO: delete placeholder svg element -->
                 <svg width="300" height="250" style="background-color: lightcoral">
                     <text x="50" y="50">HERE should be CountVis</text>
-                </svg></br></br></br>
+                </svg>
                 <svg width="300" height="250" style="background-color: lightcoral">
                     <text x="50" y="50">HERE should be CountVis2</text>
                 </svg>
@@ -67,7 +69,9 @@
 
     </div>
     <script>
+        
         $(function(){ // this function is called after the HTML document is fully loaded
+            
 
             // variables keeping global knowledge of the data
             var co2Data = [];
@@ -81,17 +85,19 @@
                 var MyEventHandler = new Object();
 
                 //Instantiate Vis Objects
-                var count_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);           
+                var count_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);   
+
             }
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _data) {
+            var dataLoaded = function (error, _data, _long_lat) {
                 if (!error) {
 
+                    console.log(_long_lat);
                     // Wrangle Data
                     flat_data = []
 
-                  _data.Root.data.record.forEach(function(d){
+                    _data.Root.data.record.forEach(function(d){
                     if("__text" in d.field[3]){
                     var country_name = d.field[0]["__text"]
                     var country_id = d.field[0]["_key"]
@@ -124,7 +130,7 @@
                     scale.domain(d3.range(1960, 2014))
                     scale.range(d3.range(0, 53))
 
-                    console.log(c_array)
+                    //console.log(c_array)
 
                     c_array.forEach(function(d, i){
                      var years = d3.range(53).map(function () {
@@ -156,7 +162,8 @@
              //load data here and call "dataLoaded" afterwards
                 queue()
                 .defer(d3.json, 'data/countries_co2_raw_data.json') 
-                .await(dataLoaded); 
+                .defer(d3.json, 'data/long_lat.json')
+                .await(function(error, file1, file2) { dataLoaded(error, file1, file2); });
 
                 // bind GDP button to a function
                     d3.select("#gdpBtn").on("click", function() {
