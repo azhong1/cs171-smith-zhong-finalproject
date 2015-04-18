@@ -22,18 +22,18 @@ WorldVis = function(_parentElement, _data, _eventHandler){
  * Method that sets up the SVG and the variables
  */
 WorldVis.prototype.initVis = function(){
+
     var that = this
-    //console.log(that.data);
+    console.log(that.data);
+
 	//append svg element
 	this.svg = this.parentElement.append("svg")
       .attr("width", this.width)
       .attr("id", "map")
       .attr("height", this.height)
-        //.style("background-color", "lightblue")
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
         
-    
     //instantiate world map
     this.map = new Datamap({element: document.getElementById('map'),
         scope: 'world',
@@ -41,6 +41,9 @@ WorldVis.prototype.initVis = function(){
         //    popupOnHover: false,
         //    highlightOnHover: false
         //}
+        fills: {
+            defaultFill: '#ffee66'
+        },
         done: function(datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
 
@@ -58,21 +61,23 @@ WorldVis.prototype.initVis = function(){
     this.addSlider(this.svg)
 
     // filter, aggregate, modify data, calls updateVis
-    this.wrangleData(1962);
+    this.wrangleData_gdp();
 
 }
 
 
 /**
- * Method to wrangle the data. 
+ * Method to wrangle the data for gdp. 
   */
-WorldVis.prototype.wrangleData= function(year){
+WorldVis.prototype.wrangleData_gdp= function(){
+
+    this.toggle = 0
 
     var that = this
 
     this.displayData = [];
 
-    var current_year = year - 1962 //to get the indexing correct
+    var current_year = this.year - 1959 //to get the indexing correct
 
     //scale the bubbles
     var x = d3.scale.linear()
@@ -95,15 +100,126 @@ WorldVis.prototype.wrangleData= function(year){
         }
     })
 
-    this.updateVis(year);
+    //wrangle data for fill colors and country codes
+    fills_array = {}
+    country_array = {}
+
+    var gdp_scale = d3.scale.linear()
+        .domain([0, 16163200000000/4])
+        .rangeRound([204, 17]) //#66 to #cc
+
+    var red_scale = d3.scale.linear()
+        .domain([0, 16163200000000])
+        .rangeRound([255, 204])
+
+    that.data.forEach(function(d) {
+        var gdp = d.gdp[current_year]
+        var string;
+        if (gdp > -1 && d.longitude != -1 && d.latitude != -1) {
+            if (gdp > 16163200000000/4) {
+                string = "#ff0566" 
+            } else {
+                string = "#ff" + gdp_scale(gdp).toString(16) + "66"
+            }
+            
+            var obj = {}
+            obj["fillKey"] = d.country_id
+            fills_array[d.country_id] = string
+            country_array[d.country_id] = obj
+
+        }
+        
+    })
+
+    this.displayData.fills_array = fills_array
+    this.displayData.country_array = country_array
+
+    console.log(this.displayData.fills_array)
+
+    this.updateVis();
 
 }
 
 
 /**
+ * Method to wrangle data for population. 
+  */
+WorldVis.prototype.wrangleData_pop= function(){
+
+    var that = this
+
+    this.toggle = 1
+
+    this.displayData = [];
+
+    var current_year = this.year - 1959 //to get the indexing correct
+
+    //scale the bubbles
+    var x = d3.scale.linear()
+        x.domain([0, 7200000])
+        x.range([3, 80])
+
+
+    //wrangle data for bubbles
+    this.data.forEach(function(d){
+        if (d.longitude != -1 && d.latitude != -1){
+            if (d.years[current_year] > 0) {
+                d.radius = x(d.years[current_year])
+            } else {
+                d.radius = 0
+            }
+            
+            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, 
+                "code": d.country_id, "borderWidth": 0, "fillOpacity": 0.5})
+
+        }
+    })
+
+    //wrangle data for fill colors and country codes
+    fills_array = {}
+    country_array = {}
+
+    var pop_scale = d3.scale.linear()
+        .domain([1000000, 135069500/2])
+        .rangeRound([220, 180]) //#66 to #cc
+
+    var pop_scale_large = d3.scale.linear()
+        .domain([135069500/2, 1350695000])
+        .rangeRound([180, 17])
+
+    that.data.forEach(function(d) {
+        var pop = d.pop[current_year]
+        console.log(pop_scale(pop));
+        var string;
+        if (pop > -1 && d.longitude != -1 && d.latitude != -1) {
+            if (pop > 135069500/2) {
+                string = "#" + pop_scale_large(pop).toString(16) + "99" + "cc"//"#0599cc" 
+            } else {
+                string = "#" + pop_scale(pop).toString(16) + "99" + "cc"
+            }
+            
+            var obj = {}
+            obj["fillKey"] = d.country_id
+            fills_array[d.country_id] = string
+            country_array[d.country_id] = obj
+
+        }
+        
+    })
+
+    this.displayData.fills_array = fills_array
+    this.displayData.country_array = country_array
+
+    console.log(this.displayData.fills_array)
+
+    this.updateVis();
+
+}
+
+/**
  * Drawing Method
  */
-WorldVis.prototype.updateVis = function(year){
+WorldVis.prototype.updateVis = function(){
     
     // update circles
     this.map.bubbles(this.displayData); //, {highlightOnHover: false});
@@ -112,8 +228,11 @@ WorldVis.prototype.updateVis = function(year){
         //    highlightOnHover: false
         //});
 
+    this.map.updateChoropleth(
+        this.displayData.fills_array);
+
     d3.selectAll("circle")
-       .style("fill", "#aaac84");
+       .style("fill", "#990033");
 
     
 
@@ -153,7 +272,7 @@ WorldVis.prototype.addSlider = function(svg){
         var value = Math.max(0, Math.min(400,d3.event.x));
 
         //update current year value
-        this.year = sliderScale(value)
+        that.year = sliderScale(value)
 
         d3.select(this)
             .attr("x", function () {
@@ -161,7 +280,11 @@ WorldVis.prototype.addSlider = function(svg){
                 
             })
 
-        that.wrangleData(this.year);
+        if (that.toggle == 0) {
+            that.wrangleData_gdp();
+        } else {
+            that.wrangleData_pop();
+        }
         
     }
     var sliderDragBehaviour = d3.behavior.drag()
@@ -239,3 +362,4 @@ WorldVis.prototype.addLinePlot = function(svg){
         .attr("stroke", "black")
         .attr("stroke-width", "1.5px")
 }
+

@@ -32,16 +32,15 @@
 
         <div class="row">
             <div class="col-md-8 col-sm-12">
-               <p> The following visualization shows you the global carbon emissions from 1960-2014. Press play to see the animation. Click a country to see its detailed energy profile.</p>
+               <p> The following visualization shows you the global carbon emissions from 1960-2014. Drag the slider to see the animation. Click a country to see its detailed energy profile.</p>
             </div>
 
         </div>
 
         <div class="row">
             <div class="col-md-5">
-                <button class="btn btn-sm btn-primary" id="gdpBtn"> GDP </button>
-                <button class="btn btn-sm btn-primary" id="popBtn"> Population </button>
-                <button class="btn btn-sm btn-primary" id="frBtn"> % Forest Area </button>
+                <button class="btn btn-sm btn-info" type="submit" value="gdp" id="gdpBtn"> GDP </button>
+                <button class="btn btn-sm btn-info" type="submit" value="p hop" id="popBtn"> Population </button>
             </div>
 
 
@@ -56,13 +55,6 @@
         <div class="row">
                  <!--<div class="col-md-1" id="countVis">-->
             <div id="countVis">
-                <!-- TODO: delete placeholder svg element -->
-<!--                 <svg width="300" height="250" style="background-color: lightcoral">
-                    <text x="50" y="50">HERE should be CountVis</text>
-                </svg>
-                <svg width="300" height="250" style="background-color: lightcoral">
-                    <text x="50" y="50">HERE should be CountVis2</text>
-                </svg> -->
             </div>
         </div>
 
@@ -87,8 +79,9 @@
                 var MyEventHandler = new Object();
 
                 //Instantiate Vis Objects
-                var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);   
+                
                 var count_vis = new CountryVis(d3.select("#countVis"), engData);
+                var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);   
 
                 // Bind the eventHandler to the Vis Objects
                 $(MyEventHandler).bind("selectionChanged", function(event, selection){
@@ -97,7 +90,20 @@
 
                 })
 
+                //d3.select("input[value=\"gdp\"]").on("click", new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler) );
+                var button_gdp = document.getElementById("gdpBtn");
+                button_gdp.addEventListener("click", function() { 
+                  world_vis.wrangleData_gdp();  
+                });
+
+                var button_pop = document.getElementById("popBtn");
+                button_pop.addEventListener("click", function() { 
+                  world_vis.wrangleData_pop();  
+                });
+
             }
+
+
 
             // call this function after both files are loaded -- error should be "null" if no error
             var dataLoaded = function (error, _data, _gdpdata, _popdata, _longlat, _totaldata, _altdata, _combdata) {

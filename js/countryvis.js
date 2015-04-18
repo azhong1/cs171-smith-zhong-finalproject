@@ -72,25 +72,25 @@ CountryVis.prototype.initVis = function(){
         // Add axes visual elements
      this.svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate("+this.margin.left+"," + this.height +")")
+        .attr("transform", "translate("+this.margin.left+"," + (this.height + 10)+")")
 
     this.svg.append("g")
         .attr("class", "y axis")
-        .attr("transform", "translate(" +this.margin.left+ ", "+0+")")
+        .attr("transform", "translate(" +this.margin.left+ ", "+10+")")
 
 
     this.container = this.svg.append("g")
       .attr("class", "area")
-      .attr("transform", "translate("+this.margin.left+","+ 0+")")
+      .attr("transform", "translate("+this.margin.left+","+ 10+")")
 
 
     this.container2 = this.svg.append("g")
       .attr("class", "area")
-      .attr("transform", "translate("+this.margin.left+","+ 0+")")
+      .attr("transform", "translate("+this.margin.left+","+ 10+")")
 
     this.container3 = this.svg.append("g")
       .attr("class", "area")
-      .attr("transform", "translate("+this.margin.left+","+ 0+")")
+      .attr("transform", "translate("+this.margin.left+","+ 10+")")
 
 
 }
@@ -151,7 +151,7 @@ CountryVis.prototype.updateVis = function(){
     path.enter()
       .append("path")
       .attr("class", "area")
-      .attr("fill", "blue")
+      .attr("fill", "#663300")
 
     path
       .transition()
@@ -166,7 +166,7 @@ CountryVis.prototype.updateVis = function(){
     path2.enter()
       .append("path")
       .attr("class", "area")
-      .attr("fill", "green")
+      .attr("fill", "#009933")
 
     path2
       .transition()
@@ -181,7 +181,7 @@ CountryVis.prototype.updateVis = function(){
     path3.enter()
       .append("path")
       .attr("class", "area")
-      .attr("fill", "pink")
+      .attr("fill", "#ccff66")
 
     path3
       .transition()

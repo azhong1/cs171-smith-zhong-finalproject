@@ -1,5 +1,10 @@
 body{
-    font-family: 'PT Sans', sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 17.5px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 100;
+    line-height: 25px;
 }
 
 .axis text {
