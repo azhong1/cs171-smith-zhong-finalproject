@@ -42,7 +42,7 @@ WorldVis.prototype.initVis = function(){
         //    highlightOnHover: false
         //}
         fills: {
-            defaultFill: '#ffee66'
+            defaultFill: '#E0E0E0'
         },
         done: function(datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
@@ -127,6 +127,11 @@ WorldVis.prototype.wrangleData_gdp= function(){
             fills_array[d.country_id] = string
             country_array[d.country_id] = obj
 
+        } else {
+            var obj = {}
+            obj["fillKey"] = d.country_id
+            fills_array[d.country_id] = '#ffee66'
+            country_array[d.country_id] = obj
         }
         
     })
@@ -201,6 +206,12 @@ WorldVis.prototype.wrangleData_pop= function(){
             var obj = {}
             obj["fillKey"] = d.country_id
             fills_array[d.country_id] = string
+            country_array[d.country_id] = obj
+
+        } else {
+            var obj = {}
+            obj["fillKey"] = d.country_id
+            fills_array[d.country_id] = '#ffccff'
             country_array[d.country_id] = obj
 
         }
