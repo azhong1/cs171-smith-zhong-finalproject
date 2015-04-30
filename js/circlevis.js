@@ -3,9 +3,9 @@
 **/
 
 
-CircleVis = function(_parentElement, _data, _data2){
+CircleVis = function(_parentElement, _co2data){
 	this.parentElement = _parentElement;
-    this.data = _data;
+    this.data = this.initData(_co2data)
 
     // define all "constants" 
     this.margin = {top: 20, right: 0, bottom: 30, left: 70},
@@ -32,6 +32,59 @@ CircleVis.prototype.initVis = function(){
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
 
+    this.force = d3.layout.force()
+        .size([that.width, that.height])
+        .charge(-50)
+        .linkDistance(10)
+
+    var scalemax = 0
+
+    this.data.forEach(function(d, i){
+        if (parseInt(d.emissions) > scalemax){
+            scalemax = d.emissions
+        }
+    })
+    console.log(scalemax)
+
+    this.scale = d3.scale.linear().range([3, 80]).domain([0,scalemax])
+
+    var node = this.svg.append("g").selectAll(".node")
+        .data(this.data);
+
+    g = node.enter().append("g")
+          .attr("class", "node")
+            // .on("mouseover", mouseovered)
+            // .on("mouseout", mouseoff);
+
+    g.append("circle")
+            .attr("r", function(d){return that.scale(d.emissions);})
+
+    g.append("text")
+          .text(function(d) {return d.name; })
+          .style("font-size", "8pt");
+
+    node
+      .exit()
+      .remove();    
+    
+    this.force.on("tick", function (d) {
+      graph_update(0);})
+        .on("start", function(d) {})
+        .on("end", function(d) {})
+
+
+    function graph_update(duration) {
+
+  node.transition().duration(duration)
+      .attr("transform", function(d) {
+        return "translate("+d.x+","+d.y+")"; 
+      });
+}
+
+
+    
+    this.force.nodes(this.data)
+      .start();
 }
 
 
@@ -64,3 +117,23 @@ CircleVis.prototype.onSelectionChange= function (selectionStart, selectionEnd){
  *
  * */
 
+CircleVis.prototype.initData = function (data){
+
+    var new_data = []
+    data.map(function(d,i){
+        if (d.longitude != -1 && d.latitude != -1){
+            new_data.push({
+                "name": d.name,
+                "country_id": d.country_id,
+                "region": d.region,
+                "income_group": d.income_group,
+                "emissions": d.years[50],
+                "gdp": d.gdp[50],
+                "pop": d.pop[50]
+            })
+        }
+    })
+    console.log(new_data)
+    return new_data
+
+}

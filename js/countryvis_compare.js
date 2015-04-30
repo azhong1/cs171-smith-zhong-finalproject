@@ -123,7 +123,7 @@ CountryPVis.prototype.updateVis = function(){
       if (max > ymax) {ymax = max};
     })
    
-    this.x.domain([1960, 2014]);
+    this.x.domain([1960, 2013]);
     this.y.domain([0, ymax]);
 
     // updates axis
@@ -134,8 +134,6 @@ CountryPVis.prototype.updateVis = function(){
         .call(this.yAxis)
 
     var color = ["#663300", "#009933", "#ccff66"]
-
-    console.log(this.displayData)
 
     this.svg.selectAll(".lineContainer").remove()
 
@@ -204,9 +202,9 @@ CountryPVis.prototype.filterAndAggregate = function(_filter){
 
         that.metaData = d.name
 
-        gdp = d.gdp.map(function(d,i){if (d> 0) {return d/that.worldco2.gdp[i]} else {return null;}})
-        pop = d.pop.map(function(d,i){if (d> 0 && that.worldco2.pop[i] > 0) {return d/that.worldco2.pop[i]} else {return null;}})
-        co2 = d.years.map(function(d,i){if (d> 0) {return d/that.worldco2.years[i]} else {return null;}})
+        gdp = d.gdp.map(function(d,i){if (d> 0) {return d/that.worldco2.gdp[i] * 100} else {return null;}})
+        pop = d.pop.map(function(d,i){if (d> 0 && that.worldco2.pop[i] > 0) { return d/that.worldco2.pop[i] * 100 } else {return null;}})
+        co2 = d.years.map(function(d,i){if (d> 0) {return d/that.worldco2.years[i] * 100} else {return null;}})
 
         that.displayData = [{"values": gdp }, {"values": pop}, {"values": co2}]
 
@@ -214,7 +212,7 @@ CountryPVis.prototype.filterAndAggregate = function(_filter){
         }
     })
 
-
+    console.log(that.displayData)
 
 }
 

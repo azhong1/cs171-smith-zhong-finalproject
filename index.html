@@ -34,7 +34,7 @@
 
         <div class="row">
             <div class="col-md-8 col-sm-12">
-               <p> The following visualization shows you the global carbon emissions from 1960-2014. Drag the slider to see the animation. Click a country to see its detailed energy profile.</p>
+               <p> The following visualization shows you the global carbon emissions from 1960-2013. Drag the slider to see the animation. Click a country to see its detailed energy profile.</p>
             </div>
 
         </div>
@@ -58,9 +58,15 @@
                  <!--<div class="col-md-1" id="countUVis">-->
             <div id="countVis">
             </div>
-        </div>
+        </div></br></br>
         <div class="row">
             <div id="circleVis">
+              Node Size:
+                <button class="btn btn-sm btn-info" type="submit" value="total" id="co2Btn"> Total CO2 </button>
+                <button class="btn btn-sm btn-info" type="submit" value="percap" id="co2Btn"> Per Capita CO2 </button>
+                Group By:
+                 <button class="btn btn-sm btn-info" type="submit" value="location" id="grpBtn"> Geographic Location </button>
+                <button class="btn btn-sm btn-info" type="submit" value="income" id="grpBtn"> Income level </button>
             </div>
         </div>
 
@@ -89,7 +95,7 @@
                 var count_usage_vis = new CountryUVis(d3.select("#countVis"), engData);
                 var count_comp_vis = new CountryPVis(d3.select("#countVis"), engData, co2Data);
                 var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);  
-                var circle_vis = new CircleVis(d3.select("#circleVis"), co2Data, engData) 
+                var circle_vis = new CircleVis(d3.select("#circleVis"), co2Data) 
 
                 // Bind the eventHandler to the Vis Objects
                 $(MyEventHandler).bind("selectionChanged", function(event, selection){
@@ -115,7 +121,7 @@
 
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _data, _gdpdata, _popdata, _longlat, _totaldata, _altdata, _combdata, _fordata) {
+            var dataLoaded = function (error, _data, _gdpdata, _popdata, _longlat, _totaldata, _altdata, _combdata, _fordata, _metadata) {
                 if (!error) {
 
                 //Function to wrangle raw data 
@@ -169,12 +175,24 @@
 
                         var scale = d3.scale.ordinal()
 
-                        scale.domain(d3.range(1960, 2014))
-                        scale.range(d3.range(0, 53))
+                        scale.domain(d3.range(1960, 2013))
+                        scale.range(d3.range(0, 54))
 
 
                         //create object for each country
                         c_array.forEach(function(d, i){ 
+
+                        var region = null
+                        var income_group = null 
+
+
+                        //Extract country metadata, if it exists
+                        _metadata.forEach(function(m){
+                          if (m.Code == id_array[i]){
+                            income_group = m["Income Group"]
+                            region = m["Region"]
+                          }
+                        })
 
                         //create empty arrays to contain gdp, population, and emissions values for each year
                         var emptyarray = d3.range(53).map(function () {return -1;})
@@ -196,6 +214,8 @@
                           cleanest_data.push({
                             "name": d,
                             "country_id": id_array[i],
+                            "region": region,
+                            "income_group": income_group,
                             "years": emptyarray,
                              "gdp": emptyarray2,
                              "pop": emptyarray3,
@@ -242,7 +262,7 @@
                         })
 
                 //Save co2, gdp, population to global variable
-                  co2Data = cleanest_data            
+                  co2Data = cleanest_data 
 
                 //Consolodate energy data
                     var ec_array = []
@@ -317,6 +337,7 @@
                 .defer(d3.json, 'data/alt_nuc_eng_raw_data.json')
                 .defer(d3.json, 'data/combust_renew_raw_data.json')
                 .defer(d3.json, 'data/forest_area_raw_data.json')
+                .defer(d3.json, 'data/country_metadata.json')
 
                 .await(dataLoaded);
 

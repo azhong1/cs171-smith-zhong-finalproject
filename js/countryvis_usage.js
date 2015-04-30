@@ -135,7 +135,7 @@ CountryUVis.prototype.updateVis = function(){
     var ymax = Math.max.apply(null, that.totalData)
 
    
-    this.x.domain([1960, 2014]);
+    this.x.domain([1960, 2013]);
     this.y.domain([0, ymax]);
 
     // updates axis
