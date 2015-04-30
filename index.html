@@ -25,6 +25,7 @@
     <script src = "js/worldvis.js"></script>
     <script src = "js/countryvis_usage.js"></script>
     <script src = "js/countryvis_compare.js"></script>
+    <script src = "js/circlevis.js"></script>
 
 </head>
 <body>
@@ -58,6 +59,10 @@
             <div id="countVis">
             </div>
         </div>
+        <div class="row">
+            <div id="circleVis">
+            </div>
+        </div>
 
 
     </div>
@@ -83,13 +88,14 @@
                 
                 var count_usage_vis = new CountryUVis(d3.select("#countVis"), engData);
                 var count_comp_vis = new CountryPVis(d3.select("#countVis"), engData, co2Data);
-                var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);   
+                var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);  
+                var circle_vis = new CircleVis(d3.select("#circleVis"), co2Data, engData) 
 
                 // Bind the eventHandler to the Vis Objects
                 $(MyEventHandler).bind("selectionChanged", function(event, selection){
 
                     count_usage_vis.onSelectionChange(selection);
-                    count_comp_vis.onSelectionChange(selection)
+                    count_comp_vis.onSelectionChange(selection);
 
                 })
 
@@ -109,7 +115,7 @@
 
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _data, _gdpdata, _popdata, _longlat, _totaldata, _altdata, _combdata) {
+            var dataLoaded = function (error, _data, _gdpdata, _popdata, _longlat, _totaldata, _altdata, _combdata, _fordata) {
                 if (!error) {
 
                 //Function to wrangle raw data 
@@ -142,12 +148,13 @@
                     var clean_co2 = flatData(_data)
                     var clean_gdp = flatData(_gdpdata)
                     var clean_pop = flatData(_popdata)
+                    var clean_for = flatData(_fordata)
                     var clean_eng = flatData(_totaldata)
                     var clean_alt = flatData(_altdata)
                     var clean_comb = flatData(_combdata)
 
                     
-                    //Condense gdp, co2, and population datasets
+                    //Condense gdp, co2, forest area and population datasets
                     var c_array = []
                     var id_array = []
 
@@ -173,6 +180,7 @@
                         var emptyarray = d3.range(53).map(function () {return -1;})
                         var emptyarray2 = d3.range(53).map(function () {return -1; })
                         var emptyarray3 = d3.range(53).map(function () {return -1; })
+                        var emptyarray4 = d3.range(53).map(function () {return -1; })
 
                
                          //extract latitute and logitude data
@@ -191,6 +199,7 @@
                             "years": emptyarray,
                              "gdp": emptyarray2,
                              "pop": emptyarray3,
+                             "forest" : emptyarray4,
                             "longitude": lon,
                             "latitude": lat
                           })
@@ -218,16 +227,22 @@
                         clean_pop.forEach(function(d){
                           for (var i = 0; i < cleanest_data.length ; i++){
                             if (cleanest_data[i].name == d.name){
-                                // console.log(cleanest_data[i]["years"][scale(d.year)])
-                                // console.log(cleanest_data[i]["pop"][scale(d.year)])
                               cleanest_data[i]["pop"][scale(d.year)] = d.param
+                            }
+                          }
+                        })
+                        
+                        //Fill values for forest area in each country object, for each year
+                        clean_for.forEach(function(d){
+                          for (var i = 0; i < cleanest_data.length ; i++){
+                            if (cleanest_data[i].name == d.name){
+                              cleanest_data[i]["forest"][scale(d.year)] = d.param
                             }
                           }
                         })
 
                 //Save co2, gdp, population to global variable
-                  co2Data = cleanest_data
-            
+                  co2Data = cleanest_data            
 
                 //Consolodate energy data
                     var ec_array = []
@@ -301,6 +316,7 @@
                 .defer(d3.json, 'data/energy_use_ktoil_raw_data.json')
                 .defer(d3.json, 'data/alt_nuc_eng_raw_data.json')
                 .defer(d3.json, 'data/combust_renew_raw_data.json')
+                .defer(d3.json, 'data/forest_area_raw_data.json')
 
                 .await(dataLoaded);
 

@@ -205,7 +205,7 @@ CountryPVis.prototype.filterAndAggregate = function(_filter){
         that.metaData = d.name
 
         gdp = d.gdp.map(function(d,i){if (d> 0) {return d/that.worldco2.gdp[i]} else {return null;}})
-        pop = d.pop.map(function(d,i){if (d> 0) {return d/that.worldco2.pop[i]} else {return null;}})
+        pop = d.pop.map(function(d,i){if (d> 0 && that.worldco2.pop[i] > 0) {return d/that.worldco2.pop[i]} else {return null;}})
         co2 = d.years.map(function(d,i){if (d> 0) {return d/that.worldco2.years[i]} else {return null;}})
 
         that.displayData = [{"values": gdp }, {"values": pop}, {"values": co2}]
