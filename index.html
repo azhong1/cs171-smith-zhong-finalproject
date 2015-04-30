@@ -23,7 +23,8 @@
 
     <!-- add own scripts-->
     <script src = "js/worldvis.js"></script>
-    <script src = "js/countryvis.js"></script>
+    <script src = "js/countryvis_usage.js"></script>
+    <script src = "js/countryvis_compare.js"></script>
 
 </head>
 <body>
@@ -53,7 +54,7 @@
             </div>
         </div>
         <div class="row">
-                 <!--<div class="col-md-1" id="countVis">-->
+                 <!--<div class="col-md-1" id="countUVis">-->
             <div id="countVis">
             </div>
         </div>
@@ -80,13 +81,15 @@
 
                 //Instantiate Vis Objects
                 
-                var count_vis = new CountryVis(d3.select("#countVis"), engData);
+                var count_usage_vis = new CountryUVis(d3.select("#countVis"), engData);
+                var count_comp_vis = new CountryPVis(d3.select("#countVis"), engData, co2Data);
                 var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);   
 
                 // Bind the eventHandler to the Vis Objects
                 $(MyEventHandler).bind("selectionChanged", function(event, selection){
 
-                    count_vis.onSelectionChange(selection);
+                    count_usage_vis.onSelectionChange(selection);
+                    count_comp_vis.onSelectionChange(selection)
 
                 })
 

@@ -24,7 +24,6 @@ WorldVis = function(_parentElement, _data, _eventHandler){
 WorldVis.prototype.initVis = function(){
 
     var that = this
-    console.log(that.data);
 
 	//append svg element
 	this.svg = this.parentElement.append("svg")
@@ -139,8 +138,6 @@ WorldVis.prototype.wrangleData_gdp= function(){
     this.displayData.fills_array = fills_array
     this.displayData.country_array = country_array
 
-    console.log(this.displayData.fills_array)
-
     this.updateVis();
 
 }
@@ -194,7 +191,6 @@ WorldVis.prototype.wrangleData_pop= function(){
 
     that.data.forEach(function(d) {
         var pop = d.pop[current_year]
-        console.log(pop_scale(pop));
         var string;
         if (pop > -1 && d.longitude != -1 && d.latitude != -1) {
             if (pop > 135069500/2) {
@@ -220,8 +216,6 @@ WorldVis.prototype.wrangleData_pop= function(){
 
     this.displayData.fills_array = fills_array
     this.displayData.country_array = country_array
-
-    console.log(this.displayData.fills_array)
 
     this.updateVis();
 
@@ -272,7 +266,6 @@ WorldVis.prototype.onSelectionChange= function (selectionStart, selectionEnd){
 WorldVis.prototype.addSlider = function(svg){
     var that = this;
 
-    //console.log(that.data);
     //Scale slider position values to year values
     var sliderScale = d3.scale.linear()
 
@@ -351,8 +344,6 @@ WorldVis.prototype.addLinePlot = function(svg){
 
     var ymax = Math.max.apply(null, linedata)
     var ymin = d3.min(linedata, function(d){if (d > 0){ return d}})
-
-    //console.log(ymax)
 
     y.domain([0, ymax])
     y.range([100, 0])
