@@ -77,11 +77,6 @@ CountryPVis.prototype.initVis = function(){
         .attr("class", "y axis")
         .attr("transform", "translate(" +this.margin.left+ ", "+10+")")
 
-
-    this.container = this.svg.append("g")
-      .attr("class", "lineContainer")
-      .attr("transform", "translate("+this.margin.left+","+ 10+")")
-
 }
 
 
@@ -139,9 +134,19 @@ CountryPVis.prototype.updateVis = function(){
 
     var color = ["#663300", "#009933", "#ccff66"]
 
+    console.log(this.displayData)
+
+    this.svg.selectAll(".lineContainer").remove()
+
+    var container = this.svg.append("g")
+      .attr("class", "lineContainer")
+      .attr("transform", "translate("+this.margin.left+","+ 10+")")
+
+
     // updates graph
-    var path = this.container.selectAll("path")
+    var path = container.selectAll(".line")
       .data(this.displayData)
+      .attr("class", "line")
 
     path.enter()
       .append("path")
