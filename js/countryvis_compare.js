@@ -63,8 +63,9 @@ CountryPVis.prototype.initVis = function(){
     //creates line generator
     this.line = d3.svg.line()
     .interpolate("basis")
-    .x(function(d,i) { return that.x(yearscale(i)); })
-    .y(function(d) { return that.y(d); });
+    .x(function(d,i) {return that.x(yearscale(i)); })
+    .y(function(d) { return that.y(d); })
+        .defined(function(d) { return d; });
 
   
     //adds visual elements
@@ -203,9 +204,9 @@ CountryPVis.prototype.filterAndAggregate = function(_filter){
 
         that.metaData = d.name
 
-        gdp = d.gdp.map(function(d,i){if (d> 0) {return d/that.worldco2.gdp[i]} else {return -1;}})
-        pop = d.pop.map(function(d,i){if (d> 0) {return d/that.worldco2.pop[i]} else {return -1;}})
-        co2 = d.years.map(function(d,i){if (d> 0) {return d/that.worldco2.years[i]} else {return -1;}})
+        gdp = d.gdp.map(function(d,i){if (d> 0) {return d/that.worldco2.gdp[i]} else {return null;}})
+        pop = d.pop.map(function(d,i){if (d> 0) {return d/that.worldco2.pop[i]} else {return null;}})
+        co2 = d.years.map(function(d,i){if (d> 0) {return d/that.worldco2.years[i]} else {return null;}})
 
         that.displayData = [{"values": gdp }, {"values": pop}, {"values": co2}]
 
