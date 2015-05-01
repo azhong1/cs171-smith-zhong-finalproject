@@ -62,10 +62,10 @@
         <div class="row">
             <div id="circleVis">
               Node Size:
-                <button class="btn btn-sm btn-info" type="submit" value="total" id="co2Btn"> Total CO2 </button>
-                <button class="btn btn-sm btn-info" type="submit" value="percap" id="co2Btn"> Per Capita CO2 </button>
+                <button class="btn btn-sm btn-info" type="submit" value="total" id="totalBtn"> Total CO2 </button>
+                <button class="btn btn-sm btn-info" type="submit" value="percap" id="percapBtn"> Per Capita CO2 </button>
                 Group By:
-                 <button class="btn btn-sm btn-info" type="submit" value="location" id="grpBtn"> Geographic Location </button>
+                 <button class="btn btn-sm btn-info" type="submit" value="location" id="locationBtn"> Geographic Location </button>
                 <button class="btn btn-sm btn-info" type="submit" value="income" id="grpBtn"> Income level </button>
             </div>
         </div>
@@ -114,6 +114,26 @@
                 var button_pop = document.getElementById("popBtn");
                 button_pop.addEventListener("click", function() { 
                   world_vis.wrangleData_pop();  
+                });
+
+                 var button_co2ttl = document.getElementById("totalBtn");
+                button_co2ttl.addEventListener("click", function() { 
+                  circle_vis.wrangleData(this.value);  
+                });
+
+                var button_percap = document.getElementById("percapBtn");
+                button_percap.addEventListener("click", function() { 
+                  circle_vis.wrangleData(this.value);  
+                });
+
+                var button_loc = document.getElementById("locationBtn");
+                button_loc.addEventListener("click", function() { 
+                  circle_vis.wrangleData(this.value);  
+                });
+
+                var button_income = document.getElementById("grpBtn");
+                button_income.addEventListener("click", function() { 
+                  circle_vis.wrangleData(this.value);  
                 });
 
             }

@@ -48,10 +48,10 @@ CircleVis.prototype.initVis = function(){
 
     this.scale = d3.scale.linear().range([3, 80]).domain([0,scalemax])
 
-    var node = this.svg.append("g").selectAll(".node")
+    this.node = this.svg.append("g").selectAll(".node")
         .data(this.data);
 
-    g = node.enter().append("g")
+    g = this.node.enter().append("g")
           .attr("class", "node")
             // .on("mouseover", mouseovered)
             // .on("mouseout", mouseoff);
@@ -63,7 +63,7 @@ CircleVis.prototype.initVis = function(){
           .text(function(d) {return d.name; })
           .style("font-size", "8pt");
 
-    node
+    this.node
       .exit()
       .remove();    
     
@@ -75,7 +75,7 @@ CircleVis.prototype.initVis = function(){
 
     function graph_update(duration) {
 
-  node.transition().duration(duration)
+    that.node.transition().duration(duration)
       .attr("transform", function(d) {
         return "translate("+d.x+","+d.y+")"; 
       });
@@ -88,7 +88,12 @@ CircleVis.prototype.initVis = function(){
 }
 
 
+CircleVis.prototype.wrangleData = function(value){
+    
+console.log(value)
+    
 
+}
 
 /**
  * Drawing Method
@@ -101,13 +106,6 @@ CircleVis.prototype.updateVis = function(){
 }
 
 
-/**
- * Gets called by event handler and should create new aggregated data
- */
-CircleVis.prototype.onSelectionChange= function (selectionStart, selectionEnd){
-
-
-}
 
 /*
  *
