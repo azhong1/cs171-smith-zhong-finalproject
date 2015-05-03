@@ -1,10 +1,10 @@
 /**
-  CountryPVis object
+	CountryPVis object
 **/
 
 
 TempVis = function(_parentElement, _tempdata){
-  this.parentElement = _parentElement;
+	this.parentElement = _parentElement;
     this.data = _tempdata
     this.displayData = null
 
@@ -23,8 +23,8 @@ TempVis = function(_parentElement, _tempdata){
 TempVis.prototype.initVis = function(){
     var that = this;
 
-  //append svg element
-  this.svg = this.parentElement.append("svg")
+	//append svg element
+	this.svg = this.parentElement.append("svg")
       .attr("width", this.width + this.margin.right + this.margin.left)
         .attr("height", this.height + this.margin.top +this.margin.bottom)
         .style("background-color", "none")
@@ -52,8 +52,8 @@ TempVis.prototype.initVis = function(){
 
     this.yearscale = d3.scale.ordinal()
 
-        this.yearscale.range(d3.range(1880, 2014))
-        this.yearscale.domain(d3.range(1, 135))
+        this.yearscale.range(d3.range(1880, 2015))
+        this.yearscale.domain(d3.range(0, 135))
 
 
     //creates line generator
@@ -130,7 +130,7 @@ TempVis.prototype.initVis = function(){
 
     this.svg
       .append("g")
-        .attr("transform", "translate(" +(this.margin.left+585.2985) + ", "+(10+25.1875)+")")
+        .attr("transform", "translate(" +(this.margin.left+590.2985) + ", "+(33.1875)+")")
         .append("circle")
         .attr("class", "flash_node")
         .attr("r", 10);
@@ -197,11 +197,18 @@ TempVis.prototype.initVis = function(){
             .style("fill","#990033")
             .style("stroke", "none")
             .attr("r", 6);
+
+          var text;
+          if (i == 134) {
+            text = "2014 was the warmest year on record.";
+          } else {
+            text = that.yearscale(i)+":  " + d/10 + "°C";
+          }
           d3.select(".tooltip_temps")
             .style("left", (that.x(that.yearscale(i))+150)+"px")
             .style("top", that.y(d/10)+"px" )
             .style("visibility", "visible")
-            .text(that.yearscale(i)+":  " + d/10 + "°C");
+            .text(text);
           })
 
         .on("mouseout", function(d, i) {
