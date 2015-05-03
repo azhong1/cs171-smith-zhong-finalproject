@@ -269,11 +269,11 @@ WorldVis.prototype.addSlider = function(svg){
     //Scale slider position values to year values
     var sliderScale = d3.scale.linear()
 
-    sliderScale.domain([0, 400])
+    sliderScale.domain([0, 300])
     sliderScale.rangeRound([1960,2012])
 
     var sliderDragged = function(){
-        var value = Math.max(0, Math.min(400,d3.event.x));
+        var value = Math.max(0, Math.min(285,d3.event.x));
 
         //update current year value
         that.year = sliderScale(value)
@@ -302,7 +302,7 @@ WorldVis.prototype.addSlider = function(svg){
     sliderGroup.append("rect").attr({
         class:"sliderBg",
         x:5,
-        width:400,
+        width:300,
         height: 10
     }).style({
         fill:"lightgray"
@@ -318,6 +318,76 @@ WorldVis.prototype.addSlider = function(svg){
     }).style({
         fill:"#333333"
     }).call(sliderDragBehaviour)
+
+    this.parentElement.append("button").attr({
+        "id": "playBtn",
+        "class": "btn btn-sm btn-info",
+        "transform": "translate(300,-100)",
+    }).text("Play")
+
+    this.animationOn = false;
+
+    // Turn on and off slider animation
+    this.playButton = document.getElementById("playBtn");
+    this.playButton.addEventListener("click", function() { 
+
+        if (that.animationOn == false){
+        
+            //update button text
+            that.parentElement.select("#playBtn")
+                .text("Pause")
+
+            that.animationOn = true
+
+            var start = 0
+
+            function animationLoop(){
+                setTimeout(function () { 
+                    
+                    var slider = svg.select(".sliderHandle")
+                    var pos = parseInt(slider.attr("x")) + 1;
+
+                    //update slider position
+                    slider.attr({x: pos})
+
+                    //update visualization
+                    that.year = sliderScale(pos)
+
+                    if (that.toggle == 0) {
+                        that.wrangleData_gdp();
+                    } 
+                    else {
+                        that.wrangleData_pop();
+                    }
+                    console.log(start)
+
+                    start = pos;
+                    if(start < 285 && that.animationOn){
+                        animationLoop()
+                    }
+                    else if (start > 284 && that.animationOn){
+                        that.animationOff
+                        that.parentElement.select("#playBtn")
+                .           text("Play")
+
+
+                    }
+                }, 1) 
+            } 
+
+            animationLoop()       
+
+        }
+        else{
+
+            //update button text    
+            that.parentElement.select("#playBtn")
+                    .text("Play")
+
+            //reset animation boolean to exit animation loop
+            that.animationOn = false
+        }                
+    });
 
 }
 
@@ -348,7 +418,7 @@ WorldVis.prototype.addLinePlot = function(svg){
     y.domain([0, ymax])
     y.range([100, 0])
 
-    x.range([0,400])
+    x.range([0,300])
     x.domain([0, 53])
 
 
