@@ -11,6 +11,7 @@
     <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
     <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
     <script src="dm/dist/datamaps.world.min.js"></script>
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 
     <!--Stylesheets-->
     <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
@@ -26,10 +27,56 @@
     <script src = "js/countryvis_usage.js"></script>
     <script src = "js/countryvis_compare.js"></script>
     <script src = "js/circlevis.js"></script>
+    <script src = "js/temperaturevis.js"></script>
 
 </head>
 <body>
+    <div class="div1" id="back">
+      <div class="div2">
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <p class="heading-begin" id="1">C&nbspA&nbspR&nbspB&nbspO&nbspN&nbsp E&nbspM&nbspI&nbspS&nbspS&nbspI&nbspO&nbspN&nbspS </p>
+      <p class="heading-middle" id="2">an economic perspective</p>
+      <a href="#info"><p class="temp_title_begin">WHY IS THIS IMPORTANT?</p></a> 
+      <a href="#chapter_one"><p class="heading-end">I already know. Take me to the visualization</p></a>
+    </div>
+    <a name="info"></a>
+    <div class="col-md-12" style="background-color:#F8F8F8">
+      <img class="icon" src="images/world.png">
+      <p class="title">You’ve probably heard about<text class="emphasis"> global warming</text>.</p>
+
+      <p class="title2">Unsurpringly, it's still very much a reality of the world we live in. Let’s revisit some of the facts.</p>
+
+    </div>
+    <div class="col-md-12"  id="temperatures">
+        
+      <div class="col-md-4" id="title3"><p class="title3"><text class="temp_title">RISING TEMPERATURES</text><br><br>Multiple lines of scientific evidence show that temperatures are rising. This graph compares average annual global surface temperature relative to the average temperature from 1951-1980. The 10 warmest years in the past 135 years have all occurred since 2000, with the exception of 1998. 2014 is ranked the warmest on record. (Data from NASA.)</p></div>
+      <div class="col-md-8" id="tempVis">
+          <p class="tooltip_temps">Here is where we will say something.</p>
+            </div>
+    </div>
+    <div class="col-md-12" style="background-color:#F8F8F8">
+      <p class="title4" id="title4">The effects of rising temperatures aren’t waiting for some far-flung future.</p>
+      <p class="temp_title_2">THEY'RE HAPPENING NOW</p>
+
+    </div>
+    <div class="effects">
+      <div class="hover1" id="hover1"><img class="issues_cover" id="hover1_img" src="images/ice2.jpg"><p class="hover_text" id="hover1_text"><text class="hover_heading">MELTING ICE CAPS</text><br><br>Mountain glaciers, ice sheets covering West Antarctica and Greenland, and Arctic sea ice are melting at alarming rates, causing an upwards trend in the sea levels in the past century.</p></div><div class="hover1" id="hover2"><img class="issues_cover" id="hover2_img" src="images/migration.jpg"><p class="hover_text" id="hover2_text"><text class="hover_heading">THREAT TO BIODIVERSITY</text><br><br>More than 1 million species are facing extinction due to global warming and its negative impact on ecosystems and migration patterns.</p></div><div class="hover1" id="hover3"><img class="issues_cover" id="hover3_img" src="images/hurricane.jpg"><p class="hover_text" id="hover3_text"><text class="hover_heading">NATURAL DISASTERS</text><br><br>There has been a 100% increase in both the duration and intensity of natural calamities occurring on earth since the 1970’s, particularly tropical storms and hurricanes, with a possible link to the increased amount of carbon dioxide in the earth’s atmosphere.</p></div><div class="hover1" id="hover4"><img class="issues_cover" id="hover4_img" src="images/manhattan1.jpg"><p class="hover_text" id="hover4_text"><text class="hover_heading">EFFECT ON HUMAN LIVES</text><br><br>Global warming also impacts humans by loss of habitat from inundation and by threatening food security by decreasing crop yields. </p></div>
+
+    </div>
+    <div class="col-md-12" style="background-color:#F8F8F8">  
+      <p class="title4" id="title4">The Intergovernmental Panel on Climate Change (IPCC) reported in 2014 that scientists were more than 95% certain that <br>most of global warming is caused by <text class="emphasis_1">increasing concentrations of greenhouse gases</text> and <text class="emphasis_1">other human activities.</text></p>
+      <p class="title5">This visualization will explore exactly that.</p>
+      <p class="temp_title_3">READY?</p>
+      <a href="#chapter_one"><p class="temp_title_4">TAKE ME TO THE VISUALIZATION</p></a>
+ 
+    </div>
+    <!--beginning of chapter one-->
+
     <div class="container">
+      <a name="chapter_one" id="chapter_one"></a>
         <h1>Global CO2 and Energy Usage</h1>
 
         <div class="row">
@@ -55,7 +102,7 @@
             </div>
         </div>
         <div class="row">
-                 <!--<div class="col-md-1" id="countUVis">-->
+
             <div id="countVis">
             </div>
         </div></br></br>
@@ -73,10 +120,15 @@
 
     </div>
     <script>
-        
-        $(function(){ // this function is called after the HTML document is fully loaded
-            
+        //to fade things in
+        var fs = 1000;
+        var fs_2 = 0;
 
+        $("#back").fadeIn(fs);
+        
+        // this function is called after the HTML document is fully loaded
+        $(function(){ 
+            
             // variables keeping global knowledge of the data
             var co2Data = [];
 
@@ -87,11 +139,16 @@
             // call this function after Data is loaded, reformatted and bound to the variables
             var initVis = function(){
 
+                //temperature data
+                var temperature_array = [-23,   -15,  -18,  -21,  -29,  -27,  -26,  -33,  -21,  -11,  -34,  -27,  -32,  -36,  -33,  -26,  -19,  -19,  -32,  -21,  -16,  -21,  -31,  -37,  -45,  -31,  -27,  -43,  -44,  -48,  -47,  -45,  -42,  -40,  -24,  -17,  -37,  -45,  -32,  -30,  -28,  -21,  -30,  -27,  -25,  -23,  -11,  -20,  -17,  -32,  -13,  -8,   -11,  -26,  -10,  -16,  -11,  2,  5,  0,  6,  7,  5,  5,  13,   0,  -8,   -5,   -11,  -12,  -19,  -7,   1,  8,  -12,  -13,  -18,  3,  5,  3,  -4,   6,  4,  8,  -20,  -10,  -4,   -1,   -5,   6,  4,  -6,   2,  16,   -7,   -1,   -12,  15,   5,  12,   23,   28,   9,  27,   12,   8,  14,   28,   35,   24,   39,   38,   19,   21,   28,   43,   32,   45,   61,   40,   40,   52,   61,   60,   51,   65,   59,   62,   49,   59,   66,   55,   57,   60,   67];
+
+
                 //Create Event Handler
                 var MyEventHandler = new Object();
 
                 //Instantiate Vis Objects
                 
+                var temperature_vis = new TempVis(d3.select("#tempVis"), temperature_array);
                 var count_usage_vis = new CountryUVis(d3.select("#countVis"), engData);
                 var count_comp_vis = new CountryPVis(d3.select("#countVis"), engData, co2Data);
                 var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);  

@@ -1,5 +1,7 @@
+/***HEAD*/
+
 body{
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
     font-size: 17.5px;
     font-style: normal;
     font-variant: normal;
@@ -7,15 +9,412 @@ body{
     line-height: 25px;
 }
 
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+
+.1 {
+    position:relative;
+    height:100px;
+}
+
+.div1 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background: url(back_1.jpg) no-repeat center center fixed; 
+  
+}
+
+#back {
+    display:none;
+}
+
+#home {
+    display: none;
+}
+
+#3 {
+    display: none;
+}
+
+.div2 {
+    background-color: black;
+    opacity: 0.3;
+    height:100%;
+}
+
+.heading-begin {
+    text-align: center;
+    margin-top: 250px;
+    
+    color: white;
+    font-size: 50px;
+}
+
+.heading-middle {
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    margin-top: 50px;
+    margin-bottom: 80px;
+    font-weight: 100;
+    letter-spacing: 0px;
+
+}
+
+.heading-end {
+    /*font-family: Georgia, serif;*/
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 304px;
+    letter-spacing: 0px;
+    font-style: italic;
+}
+
+.heading-end:hover {
+    text-decoration: underline;
+    transition: all .15s ease;
+   -moz-transition: all .15s ease;
+   -o-transition: all .15s ease;
+   -webkit-transition: all .15s ease;
+}
+
+#temperatures {
+    background-color: white;
+    height:500px;
+    width: 100%;
+    position:relative;
+}
+
+.icon, .icon_1 {
+    height:50px;
+    display: block;
+    margin-left:auto;
+    margin-right: auto;
+}
+
+.icon {
+    margin-top: 60px;
+}
+
+.icon_1 {
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+#icon {
+    padding-top: 50px;
+    background-color: #F5F5F5;
+}
+
+.title {
+    /*font-family: Georgia, serif;*/
+    margin-top: 20px;
+    text-align: center;
+    font-size: 25px;
+    letter-spacing: 0px;
+    font-weight: lighter;
+}
+
+.title2, .title3, .title4 {
+    /*font-family: Georgia, serif;*/
+    text-align: center;
+    font-size: 17px;
+    letter-spacing: 0px;
+    font-weight: 150;
+}
+
+.title2 {
+    margin-top: 10px;
+    margin-bottom: 80px;
+}
+
+.title3 {
+    margin-right: 0px;
+    padding-top: 70px;
+    margin-top: 50px;
+    width:80%;
+    margin-left: 100px;
+    text-align: left;
+    letter-spacing: 0px;
+    font-size: 16px;
+}
+
+.title4 {
+    letter-spacing: 0px;
+    margin-top: 70px;
+    margin-bottom: 10px;
+    font-size: 17px;
+    width:75%;
+    display:block;
+    margin-left:auto;
+    margin-right: auto;
+    /*color:#B8B8B8;*/
+}
+
+.title5 {
+    letter-spacing: 0px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 17px;
+    width:60%;
+    display:block;
+    margin-left:auto;
+    margin-right: auto;
+    text-align: center;
+    color:black;
+}
+
+.warning {
+    height:110px;
+    width: 100%;
+    position:relative;
+
+}
+
+.temp_title {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    color:#990033;
+    letter-spacing: 3px;
+    font-weight:400;
+}
+
+.temp_title_2, .temp_title_3 {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin-top: 10px;
+    font-size: 20px;
+    color:black;
+    letter-spacing: 3px;
+    font-weight:400;
+    text-align: center;
+}
+
+.temp_title_2 {
+    margin-bottom: 70px;
+}
+
+.temp_title_3 {
+    margin-bottom: 20px;
+}
+
+.temp_title_4, .temp_title_begin{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin-top: 50px;
+    font-size: 14px;
+    
+    padding-top: 5px;
+    padding-bottom: 5px;
+    letter-spacing: 3px;
+    font-weight:200;
+    text-align: center;
+    
+    margin-left: 37%;
+    margin-right: 37%;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.temp_title_4 {
+    color:grey;
+    margin-bottom: 80px;
+}
+
+.temp_title_begin {
+    color:white;
+    margin-bottom: 10px;
+}
+
+.temp_title_4:hover{
+    border-color: grey;
+    background-color: grey;
+    color:white;
+    transition: all .15s ease;
+   -moz-transition: all .15s ease;
+   -o-transition: all .15s ease;
+   -webkit-transition: all .15s ease;
+}
+
+.temp_title_begin:hover {
+    border-color:white;
+    color:black;
+    transition: all .15s ease;
+   -moz-transition: all .15s ease;
+   -o-transition: all .15s ease;
+   -webkit-transition: all .15s ease;
+   background-color: white;
+}
+
+.effects {
+    width:85%;
+    display:block;
+    margin:auto auto;
+}
+
+.emphasis {
+    text-align: center;
+    font-weight: normal;
+    letter-spacing: 0px;
+}
+
+.emphasis_1 {
+    text-align: center;
+    color:#990033;
+    letter-spacing: 0px;
+}
+
+.issues_cover {
+    width: 100%;
+    height:292px;
+    /*transition: opacity .25s ease-in-out;
+   -moz-transition: opacity .25s ease-in-out;
+   -webkit-transition: opacity .25s ease-in-out;*/
+}
+
+.hover1 {
+    display: inline-block;
+    background-color: black;
+    opacity: 1;
+    width:50%;
+    height:292px;
+    position:relative;
+    
+}
+
+.hover_text {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    width:100%;
+    padding-left: 50px;
+    padding-right: 50px;
+    color:white;
+    position: absolute;
+    top:0;
+    margin-top:70px;
+    opacity:0;
+    text-align: center;
+    font-weight: 100;
+    letter-spacing: 0.25px;
+ 
+}
+
+#hover3_text {
+    margin-top:50px;
+}
+
+.hover_heading {
+    /*font-family: Georgia, serif;*/
+    font-size: 18px;
+    letter-spacing: 3px;
+    font-weight: 200;
+
+}
+
+#hover1:hover > #hover1_text{
+    opacity:1;
+    transition: opacity .15s ease-in-out;
+   -moz-transition: opacity .15s ease-in-out;
+   -webkit-transition: opacity .15s ease-in-out;
+}
+
+#hover1:hover >#hover1_img {
+    opacity: 0.4;
+    transition: opacity .15s ease-in-out;
+   -moz-transition: opacity .15s ease-in-out;
+   -webkit-transition: opacity .15s ease-in-out;
+}
+
+#hover2:hover > #hover2_text{
+    opacity:1;
+    transition: opacity .15s ease-in-out;
+   -moz-transition: opacity .15s ease-in-out;
+   -webkit-transition: opacity .15s ease-in-out;
+}
+
+#hover2:hover >#hover2_img {
+    opacity: 0.4;
+    transition: opacity .15s ease-in-out;
+   -moz-transition: opacity .15s ease-in-out;
+   -webkit-transition: opacity .15s ease-in-out;
+}
+#hover3:hover > #hover3_text{
+    opacity:1;
+    transition: opacity .15s ease-in-out;
+   -moz-transition: opacity .15s ease-in-out;
+   -webkit-transition: opacity .15s ease-in-out;
+}
+
+#hover3:hover >#hover3_img {
+    opacity: 0.4;
+    transition: opacity .15s ease-in-out;
+   -moz-transition: opacity .15s ease-in-out;
+   -webkit-transition: opacity .15s ease-in-out;
+}
+#hover4:hover > #hover4_text{
+    opacity:1;
+    transition: opacity .15s ease-in-out;
+   -moz-transition: opacity .15s ease-in-out;
+   -webkit-transition: opacity .15s ease-in-out;
+}
+
+#hover4:hover >#hover4_img {
+    opacity: 0.4;
+    transition: opacity .15s ease-in-out;
+   -moz-transition: opacity .15s ease-in-out;
+   -webkit-transition: opacity .15s ease-in-out;
+}
+
+/*** CHAPTER ONE ****/
+.history_title {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin-top: 10px;
+    font-size: 25px;
+    color:black;
+    letter-spacing: 3px;
+    font-weight:400;
+    text-align: center;
+    position:absolute;
+}
+
+.container_world {
+    position: relative;
+    display: inline-block;
+}
+
+
+/***axes formatting ****/
 .axis text {
-    font: 10px sans-serif;
+    font: 12px Helvetica, Arial, sans-serif;
 }
 
 .axis line,
 .axis path {
     fill: none;
-    stroke: #000;
+    stroke: lightgrey;
     shape-rendering: crispEdges;
+}
+
+.axis .tick {
+
+    fill: grey;
+    stroke: none;
+    opacity: 0.7;
 }
 
 .boundingBox{
@@ -30,6 +429,7 @@ body{
     color: black;
     font-size: 14px;
     background-color: lightgrey;
+}
 
 .line{
     fill: none;
@@ -37,4 +437,40 @@ body{
   stroke-width: 1.5px;
 }
 
+.temp_node {
+    stroke:grey;
+    fill: none;
+}
+
+.temp_line {
+    stroke:grey;
+    fill: grey;
+    opacity: 0;
+}
+
+.flash_node {
+    stroke:none;
+    fill: #990033;
+}
+
+.axis_text {
+    font-size: 14px;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+.tooltip_temps {
+        visibility:hidden;
+        position: absolute;
+        width: 100px;
+        padding: 10px;
+        background-color: rgba(245,245,245,.75);
+        font-size: 14px;
 }
