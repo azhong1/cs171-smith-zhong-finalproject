@@ -236,7 +236,7 @@ WorldVis.prototype.updateVis = function(){
     this.map.updateChoropleth(
         this.displayData.fills_array);
 
-    d3.selectAll("circle")
+    d3.selectAll(".datamaps-bubble")
        .style("fill", "#990033");
 
     

@@ -1,10 +1,10 @@
 /**
-	CountryPVis object
+  CountryPVis object
 **/
 
 
 TempVis = function(_parentElement, _tempdata){
-	this.parentElement = _parentElement;
+  this.parentElement = _parentElement;
     this.data = _tempdata
     this.displayData = null
 
@@ -23,8 +23,8 @@ TempVis = function(_parentElement, _tempdata){
 TempVis.prototype.initVis = function(){
     var that = this;
 
-	//append svg element
-	this.svg = this.parentElement.append("svg")
+  //append svg element
+  this.svg = this.parentElement.append("svg")
       .attr("width", this.width + this.margin.right + this.margin.left)
         .attr("height", this.height + this.margin.top +this.margin.bottom)
         .style("background-color", "none")
