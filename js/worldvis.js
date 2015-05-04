@@ -34,14 +34,23 @@ WorldVis.prototype.initVis = function(){
       .style("background-color", "none")
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+    /*.append("img")
+        .attr("src", "images/pop_key.png")
+        .attr("class", "key")
+    <img src="images/pop_key.png" class="key">*/
         
     //instantiate world map
     this.map = new Datamap({element: document.getElementById('map'),
         scope: 'world',
-        //geographyConfig: {
+        geographyConfig: {
         //    popupOnHover: false,
         //    highlightOnHover: false
-        //}
+            highlightBorderWidth: 0
+        },
+        bubblesConfig: {
+            highlightBorderWidth: 0,
+            highlightFillColor: "#990033"
+        },
         fills: {
             defaultFill: '#E0E0E0'
         },
@@ -75,6 +84,8 @@ WorldVis.prototype.initVis = function(){
 WorldVis.prototype.wrangleData_gdp= function(){
 
     this.toggle = 0
+    //update country hover color
+    this.map.options.geographyConfig["highlightFillColor"] = "#FC8D59";
 
     var that = this
 
@@ -156,6 +167,9 @@ WorldVis.prototype.wrangleData_pop= function(){
 
     this.toggle = 1
 
+    //update country hover color
+    this.map.options.geographyConfig["highlightFillColor"] = "#0214A1";
+
     this.displayData = [];
 
     var current_year = this.year - 1960 //to get the indexing correct
@@ -185,19 +199,63 @@ WorldVis.prototype.wrangleData_pop= function(){
     fills_array = {}
     country_array = {}
 
+    /*var pop_init = d3.scale.linear()
+        .domain([0, 6804046000])
+        .range([1, 6804046000])
+
+    var pop_log = d3.scale.log()
+        .domain([1, 6804046000])
+        .range([0, Math.log(6804046000)])
+
+    var pop_final = d3.scale.linear()
+        .domain([0, Math.log(6804046000)])
+        .range([0, 100])
+
     var pop_scale = d3.scale.linear()
-        .domain([1000000, 135069500/2])
-        .rangeRound([220, 180]) //#66 to #cc
+        .domain([30, 70])
+        .rangeRound([220, 150]) //#66 to #cc
 
     var pop_scale_large = d3.scale.linear()
-        .domain([135069500/2, 1350695000])
+        .domain([70, 100])
+        .rangeRound([150, 17])*/
+
+    var pop_scale = d3.scale.linear()
+        .domain([0, 135069500/10])
+        .rangeRound([220, 180]) //#dc to #b4
+
+
+    var pop_scale_large = d3.scale.linear()
+        .domain([135069500/10, 1350695000/8])
         .rangeRound([180, 17])
+
+
+    var pop_scale_larger = d3.scale.linear()
+        .domain([1350695000/8, 1350695000])
+        .rangeRound([120, 17])
+
+    console.log(pop_scale_larger.invert(70))
+
 
     that.data.forEach(function(d) {
         var pop = d.pop[current_year]
+        //var value = pop_final(pop_log(pop_init(pop)));
+        //if (pop > -1) {
+        //    console.log(pop_final(pop_log(pop_init(pop))))
+        //}
         var string;
         if (pop > -1 && d.longitude != -1 && d.latitude != -1) {
-            if (pop > 135069500/2) {
+            /*if (value > 70) {
+                string = "#" + pop_scale_large(value).toString(16) + "99" + "cc"//"#0599cc" 
+            }
+            else if (value > 30 && value <= 70) {
+                string = "#" + pop_scale(value).toString(16) + "99" + "cc"//"#0599cc" 
+            } else {
+                string = "#F099cc" 
+            }*/
+
+            if (pop > 1350695000/8) {
+                string = "#00" + pop_scale_larger(pop).toString(16) + "99"
+            } else if (pop > 135069500/10 && pop <= 1350695000/8) {
                 string = "#" + pop_scale_large(pop).toString(16) + "99" + "cc"//"#0599cc" 
             } else {
                 string = "#" + pop_scale(pop).toString(16) + "99" + "cc"
@@ -234,6 +292,8 @@ WorldVis.prototype.wrangleData_forest= function(){
     var that = this
 
     this.toggle = 2
+    //update country hover color
+    this.map.options.geographyConfig["highlightFillColor"] = "#30611C";
 
     this.displayData = [];
 
@@ -269,43 +329,27 @@ WorldVis.prototype.wrangleData_forest= function(){
         .rangeRound([200, 17]) //#66 to #cc
 
     var forest_scale_large = d3.scale.linear() //for the countries with anomalies
-        .domain([66, 75])
+        .domain([66, 85])
         .rangeRound([102, 17])
 
     var forest_scale_larger = d3.scale.linear() //for the countries with anomalies
-        .domain([76, 100])
-        .rangeRound([102, 17])
+        .domain([86, 100])
+        .rangeRound([102, 70])
 
     that.data.forEach(function(d) {
         var tree = d.forest_change[current_year]*100
         var forest = d.forest[current_year]
-        //console.log(tree);
-        //console.log(forest_scale(tree));
+
         var string;
         if (forest > -1 && d.longitude != -1 && d.latitude != -1) {
-            /*if (pop > 135069500/2) {
-                string = "#" + pop_scale_large(pop).toString(16) + "99" + "cc"//"#0599cc" 
-            } else {
-                string = "#" + pop_scale(pop).toString(16) + "99" + "cc"
-            }*/
-            if (forest > 75) {
+            if (forest > 85) {
                 string = "#00" + forest_scale_larger(forest).toString(16) +"33";
-            } else if (forest > 65 && forest < 76) {
+            } else if (forest > 65 && forest < 86) {
                 string = "#" + forest_scale_large(forest).toString(16) +"9966";
             } else {
                 string = "#" + forest_scale(forest).toString(16) +"cc99"; 
             
             }
-            /*if (forest_scale(forest) < 16 || forest_scale(forest) > 255) {
-                if (tree < 0) {
-                    string = "#ffcc99";
-                } else {
-                    string = "#00cc99";
-                }
-            } else {
-                string = "#" + forest_scale(forest).toString(16) +"cc99"; 
-            }*/
-            
 
             //console.log(string);
             
@@ -366,6 +410,8 @@ Attempting to fix bubble redrawing bug...
         //    highlightOnHover: false
         //});
     
+    
+        
 
     this.map.updateChoropleth(
         this.displayData.fills_array);
@@ -543,7 +589,6 @@ WorldVis.prototype.addLinePlot = function(svg){
 
     var years = [] 
     that.data.forEach(function(d){ if(d.name == "World") {years = d.years}})
-    console.log(that.data);
 
     years.forEach(function(d,i){if (d>0){ linedata[i] = parseInt(d)}})
 
@@ -575,8 +620,6 @@ WorldVis.prototype.addLinePlot = function(svg){
         .attr("stroke", "black")
         .attr("stroke-width", "0px");*/
 
-    console.log(linedata);
-
     lineGroup.selectAll("rect")
         .data(linedata)
       .enter().append("rect")
@@ -588,7 +631,8 @@ WorldVis.prototype.addLinePlot = function(svg){
         .attr("x", function(d,i) {return x(i); })
         .attr("y", function(d){return 80 - y(d);})
         .on("mouseover", function(d, i) {
-          console.log(i)});
+      //    console.log(i)
+      });
 
 }
 

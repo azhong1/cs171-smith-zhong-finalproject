@@ -229,8 +229,6 @@ CountryPVis.prototype.filterAndAggregate = function(_filter){
         }
     })
 
-    console.log(that.displayData)
-
 }
 
 CountryPVis.prototype.initData = function(data){
