@@ -44,7 +44,6 @@ CircleVis.prototype.initVis = function(){
             scalemax = d.emissions
         }
     })
-    console.log(scalemax)
 
     this.scale = d3.scale.linear().range([3, 80]).domain([0,scalemax])
 
@@ -89,9 +88,7 @@ CircleVis.prototype.initVis = function(){
 
 
 CircleVis.prototype.wrangleData = function(value){
-    
-console.log(value)
-    
+        
 
 }
 
@@ -131,7 +128,6 @@ CircleVis.prototype.initData = function (data){
             })
         }
     })
-    console.log(new_data)
     return new_data
 
 }

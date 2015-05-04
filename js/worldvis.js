@@ -7,6 +7,7 @@ WorldVis = function(_parentElement, _data, _eventHandler){
 	this.parentElement = _parentElement;
     this.data = _data;
     this.eventHandler = _eventHandler;
+    this.init = false
 
     // define all "constants" 
     this.margin = {top: 20, right: 0, bottom: 30, left: 70},
@@ -61,6 +62,8 @@ WorldVis.prototype.initVis = function(){
 
     // filter, aggregate, modify data, calls updateVis
     this.wrangleData_gdp();
+
+    this.init = true;
 
 }
 
@@ -225,13 +228,33 @@ WorldVis.prototype.wrangleData_pop= function(){
  * Drawing Method
  */
 WorldVis.prototype.updateVis = function(){
-    
+    var that = this
+
+/**
+Attempting to fix bubble redrawing bug... 
+*/
+    // if (this.init){
+    //  var bubbles = d3.selectAll(".datamaps-bubble");
+     
+    //  bubbles.each(function(d,i){
+    //     var bub = this 
+    //     that.displayData.forEach(function(c){
+    //         if(d.code == c.code){
+    //             console.log("hi")
+    //             bub.setAttribute("radius", c.radius)
+    //         }
+    //     })
+    // }) 
+    // }
+
+
     // update circles
-    this.map.bubbles(this.displayData); //, {highlightOnHover: false});
+    this.map.bubbles(this.displayData, {exitDelay: 0}); //, {highlightOnHover: false});
     //geographyConfig: {
         //    popupOnHover: false,
         //    highlightOnHover: false
         //});
+    
 
     this.map.updateChoropleth(
         this.displayData.fills_array);
@@ -359,7 +382,6 @@ WorldVis.prototype.addSlider = function(svg){
                     else {
                         that.wrangleData_pop();
                     }
-                    console.log(start)
 
                     start = pos;
                     if(start < 285 && that.animationOn){
