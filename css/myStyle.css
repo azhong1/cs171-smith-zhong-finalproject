@@ -553,6 +553,13 @@ a:active {
     left:890px;
 }
 
+.key {
+    position:absolute;
+    left:5px;
+    top:130px;
+    height:120px;
+}
+
 /***axes formatting ****/
 .axis text {
     font: 11px Helvetica, Arial, sans-serif;

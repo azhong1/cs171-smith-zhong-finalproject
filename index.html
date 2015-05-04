@@ -78,7 +78,6 @@
     <div class="container">
       <a name="chapter_one" id="chapter_one"></a>
         <p class="history_title">A HISTORY OF CARBON EMISSIONS AND ENERGY CONSUMPTION</p>
-
         <div class="row">
             <div class="col-md-5">
                 <button class="btn_on" type="submit" value="gdp" id="gdpBtn"> GDP </button>
@@ -92,7 +91,7 @@
 
         <div class="row">
             <div class="col-md-12" id="worldVis">
-
+              <img src="images/pop_key.png" class="key">
             </div>
 
         </div>
@@ -341,7 +340,7 @@
 
                 //Save co2, gdp, population to global variable
                   co2Data = cleanest_data 
-                  console.log(co2Data)
+                  //console.log(co2Data)
                 //Consolodate energy data
                     var ec_array = []
                     var eid_array = []
@@ -413,7 +412,7 @@
                       }
                     })
 
-                    console.log(co2Data);
+                    //console.log(co2Data);
                     //Store consolodated energy data in global variable
                     engData = cleanest_edata
 
