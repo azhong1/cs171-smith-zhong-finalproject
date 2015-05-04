@@ -14,8 +14,8 @@ CountryPVis = function(_parentElement, _engdata, _co2data){
 
     // define all "constants" 
     this.margin = {top: 20, right: 0, bottom: 30, left: 70},
-    this.width = 400 - this.margin.right - this.margin.left
-    this.height = 300 -this.margin.bottom - this.margin.top
+    this.width = 420 - this.margin.right - this.margin.left
+    this.height = 220 -this.margin.bottom - this.margin.top
 
     this.initVis();
 }
@@ -31,7 +31,8 @@ CountryPVis.prototype.initVis = function(){
 	this.svg = this.parentElement.append("svg")
       .attr("width", this.width + this.margin.right + this.margin.left)
         .attr("height", this.height + this.margin.top +this.margin.bottom)
-        .style("background-color", "none")
+        .attr("id", "compare")
+        .style("background-color", "#F5F5F5")
       .append("g")
         .attr("transform", "translate(0," + this.margin.top + ")")
 
@@ -49,7 +50,8 @@ CountryPVis.prototype.initVis = function(){
 
     this.xAxis = d3.svg.axis()
       .scale(this.x)
-      .orient("bottom");
+      .orient("bottom")
+      .tickFormat(d3.format("d"));
 
     this.yAxis = d3.svg.axis()
       .scale(this.y)

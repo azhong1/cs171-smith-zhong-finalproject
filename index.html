@@ -77,35 +77,30 @@
 
     <div class="container">
       <a name="chapter_one" id="chapter_one"></a>
-        <h1>Global CO2 and Energy Usage</h1>
-
-        <div class="row">
-            <div class="col-md-8 col-sm-12">
-               <p> The following visualization shows you the global carbon emissions from 1960-2013. Drag the slider to see the animation. Click a country to see its detailed energy profile.</p>
-            </div>
-
-        </div>
+        <p class="history_title">A HISTORY OF CARBON EMISSIONS AND ENERGY CONSUMPTION</p>
 
         <div class="row">
             <div class="col-md-5">
-                <button class="btn btn-sm btn-info" type="submit" value="gdp" id="gdpBtn"> GDP </button>
-                <button class="btn btn-sm btn-info" type="submit" value="p hop" id="popBtn"> Population </button>
+                <button class="btn_on" type="submit" value="gdp" id="gdpBtn"> GDP </button>
+                <button class="history_btn" type="submit" value="p hop" id="popBtn"> POPULATION </button>
+                <!--<button class="history_btn" type="submit" value="forest" id="forestBtn"> FOREST % </button>-->
             </div>
 
 
         </div>
-
+        <div class="history_text">here is where info will go</div>
 
         <div class="row">
-            <div class="col-md-10" id="worldVis">
+            <div class="col-md-12" id="worldVis">
 
             </div>
-        </div>
-        <div class="row">
 
+        </div>
             <div id="countVis">
+
             </div>
-        </div></br></br>
+        
+  </br></br>
         <div class="row">
             <div id="circleVis">
               Node Size:
@@ -420,7 +415,18 @@
 
                 // bind GDP button to a function
                     d3.select("#gdpBtn").on("click", function() {
-                        // TODO
+                        d3.select("#gdpBtn")
+                          .attr("class", "btn_on");
+                        d3.select("#popBtn")
+                          .attr("class", "history_btn");  
+                    
+                    });
+
+                    d3.select("#popBtn").on("click", function() {
+                        d3.select("#gdpBtn")
+                          .attr("class", "history_btn");
+                        d3.select("#popBtn")
+                          .attr("class", "btn_on");  
                     
                     });
             }
