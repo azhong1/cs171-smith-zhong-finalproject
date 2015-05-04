@@ -472,15 +472,12 @@
 
           d3.selectAll('.datamaps-hoverover').style('display', 'none');
         })
-        .transition().duration(400)
+        .transition().duration(0)
           .attr('r', function ( datum ) {
             return datum.radius;
           });
 
     bubbles.exit()
-      .transition()
-        .delay(options.exitDelay)
-        .attr("r", 0)
         .remove();
 
     function datumHasCoords (datum) {
