@@ -83,7 +83,7 @@
             <div class="col-md-5">
                 <button class="btn_on" type="submit" value="gdp" id="gdpBtn"> GDP </button>
                 <button class="history_btn" type="submit" value="p hop" id="popBtn"> POPULATION </button>
-                <!--<button class="history_btn" type="submit" value="forest" id="forestBtn"> FOREST % </button>-->
+                <button class="history_btn" type="submit" value="forest" id="forestBtn"> FOREST % </button>
             </div>
 
 
@@ -97,7 +97,8 @@
 
         </div>
             <div id="countVis">
-
+              <img src="images/legend.png" class="legend" id="legend">
+              <img src="images/legend_2.png" class="legend" id="legend2">
             </div>
         
   </br></br>
@@ -166,6 +167,11 @@
                 var button_pop = document.getElementById("popBtn");
                 button_pop.addEventListener("click", function() { 
                   world_vis.wrangleData_pop();  
+                });
+
+                var button_forest = document.getElementById("forestBtn");
+                button_forest.addEventListener("click", function() { 
+                  world_vis.wrangleData_forest();  
                 });
 
                  var button_co2ttl = document.getElementById("totalBtn");
@@ -391,6 +397,23 @@
                       }
                     })
 
+                    //add new array for change in forest area percentage
+                    co2Data.forEach(function(d){
+                      d.forest_change = [0]
+                      for (var i = 1; i < 53; i++) {
+                        d.forest_change.push(d.forest[i]-d.forest[i-1]);
+                      }
+                    })
+
+                    //add new array for change in population
+                    co2Data.forEach(function(d){
+                      d.pop_change = [d.pop[1]-d.pop[0]]
+                      for (var i = 1; i < 54; i++) {
+                        d.pop_change.push(d.pop[i]-d.pop[i-1]);
+                      }
+                    })
+
+                    console.log(co2Data);
                     //Store consolodated energy data in global variable
                     engData = cleanest_edata
 
@@ -413,12 +436,14 @@
 
                 .await(dataLoaded);
 
-                // bind GDP button to a function
+                // change button visuals on click
                     d3.select("#gdpBtn").on("click", function() {
                         d3.select("#gdpBtn")
                           .attr("class", "btn_on");
                         d3.select("#popBtn")
-                          .attr("class", "history_btn");  
+                          .attr("class", "history_btn");
+                        d3.select("#forestBtn")
+                          .attr("class", "history_btn");   
                     
                     });
 
@@ -427,6 +452,18 @@
                           .attr("class", "history_btn");
                         d3.select("#popBtn")
                           .attr("class", "btn_on");  
+                        d3.select("#forestBtn")
+                          .attr("class", "history_btn"); 
+                    
+                    });
+
+                    d3.select("#forestBtn").on("click", function() {
+                        d3.select("#gdpBtn")
+                          .attr("class", "history_btn");
+                        d3.select("#popBtn")
+                          .attr("class", "history_btn");
+                        d3.select("#forestBtn")
+                          .attr("class", "btn_on"); 
                     
                     });
             }

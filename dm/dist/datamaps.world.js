@@ -472,7 +472,7 @@
 
           d3.selectAll('.datamaps-hoverover').style('display', 'none');
         })
-        .transition().duration(0)
+        .transition().duration(400)
           .attr('r', function ( datum ) {
             return datum.radius;
           });
