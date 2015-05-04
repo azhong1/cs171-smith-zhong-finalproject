@@ -417,7 +417,7 @@ a:active {
 }
 
 .play_button, .play_button_on {
-    left:330px;
+    left:320px;
     top:468px;
     outline:none;
     border-color:grey;
@@ -555,9 +555,29 @@ a:active {
 
 .key {
     position:absolute;
-    left:5px;
-    top:130px;
-    height:120px;
+    left:-20px;
+    top:120px;
+    height:150px;
+    width:150px;
+    
+}
+
+#key_pop {
+    background: url(pop_key.png) no-repeat;
+    background-size: 100px;
+    background-position: center;
+}
+
+#key_forest {
+    background: url(forest_key.png) no-repeat;
+    background-size: 100px;
+    background-position: center;
+}
+
+#key_gdp {
+    background: url(gdp_key.png) no-repeat;
+    background-size: 100px;
+    background-position: center;
 }
 
 /***axes formatting ****/

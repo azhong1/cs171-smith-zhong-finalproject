@@ -34,10 +34,22 @@ WorldVis.prototype.initVis = function(){
       .style("background-color", "none")
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
-    /*.append("img")
-        .attr("src", "images/pop_key.png")
+    
+    //add the color keys
+    this.parentElement.append("div")
         .attr("class", "key")
-    <img src="images/pop_key.png" class="key">*/
+        .attr("id", "key_pop")
+        .style("display", "none");
+
+    this.parentElement.append("div")
+        .attr("class", "key")
+        .attr("id", "key_forest")
+        .style("display", "none")
+
+    this.parentElement.append("div")
+        .attr("class", "key")
+        .attr("id", "key_gdp")
+        .style("display", "block")
         
     //instantiate world map
     this.map = new Datamap({element: document.getElementById('map'),
@@ -84,8 +96,14 @@ WorldVis.prototype.initVis = function(){
 WorldVis.prototype.wrangleData_gdp= function(){
 
     this.toggle = 0
+
     //update country hover color
     this.map.options.geographyConfig["highlightFillColor"] = "#FC8D59";
+
+    //update color key
+    d3.select("#key_gdp").style("display", "block");
+    d3.select("#key_forest").style("display", "none");
+    d3.select("#key_pop").style("display", "none");
 
     var that = this
 
@@ -117,21 +135,28 @@ WorldVis.prototype.wrangleData_gdp= function(){
     //wrangle data for fill colors and country codes
     fills_array = {}
     country_array = {}
+    //console.log(that.data);
 
     var gdp_scale = d3.scale.linear()
-        .domain([0, 16163200000000/4])
-        .rangeRound([204, 17]) //#66 to #cc
+        .domain([0, 16163200000000/10])
+        .rangeRound([220, 100]) //#66 to #cc
 
     var red_scale = d3.scale.linear()
-        .domain([0, 16163200000000])
-        .rangeRound([255, 204])
+        .domain([16163200000000/10, 17163200000000])
+        .rangeRound([100, 17])
+
+    var array = [90]
+    for (var i = 0; i < 1; i++) {
+        console.log(red_scale.invert(array[i]))
+    }
 
     that.data.forEach(function(d) {
         var gdp = d.gdp[current_year]
         var string;
         if (gdp > -1 && d.longitude != -1 && d.latitude != -1) {
-            if (gdp > 16163200000000/4) {
-                string = "#ff0566" 
+            if (gdp > 16163200000000/10) {
+                string = "#ff" + red_scale(gdp).toString(16) + "66";
+                console.log(red_scale(gdp)) 
             } else {
                 string = "#ff" + gdp_scale(gdp).toString(16) + "66"
             }
@@ -169,6 +194,11 @@ WorldVis.prototype.wrangleData_pop= function(){
 
     //update country hover color
     this.map.options.geographyConfig["highlightFillColor"] = "#0214A1";
+
+    //update color key
+    d3.select("#key_pop").style("display", "block");
+    d3.select("#key_forest").style("display", "none");
+    d3.select("#key_gdp").style("display", "none");
 
     this.displayData = [];
 
@@ -233,8 +263,6 @@ WorldVis.prototype.wrangleData_pop= function(){
         .domain([1350695000/8, 1350695000])
         .rangeRound([120, 17])
 
-    console.log(pop_scale_larger.invert(70))
-
 
     that.data.forEach(function(d) {
         var pop = d.pop[current_year]
@@ -292,8 +320,14 @@ WorldVis.prototype.wrangleData_forest= function(){
     var that = this
 
     this.toggle = 2
+
     //update country hover color
     this.map.options.geographyConfig["highlightFillColor"] = "#30611C";
+
+    //update color key
+    d3.select("#key_forest").style("display", "block");
+    d3.select("#key_pop").style("display", "none");
+    d3.select("#key_gdp").style("display", "none");
 
     this.displayData = [];
 
@@ -335,6 +369,7 @@ WorldVis.prototype.wrangleData_forest= function(){
     var forest_scale_larger = d3.scale.linear() //for the countries with anomalies
         .domain([86, 100])
         .rangeRound([102, 70])
+    
 
     that.data.forEach(function(d) {
         var tree = d.forest_change[current_year]*100
