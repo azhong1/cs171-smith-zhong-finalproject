@@ -385,10 +385,10 @@ WorldVis.prototype.addSlider = function(svg){
                     }
 
                     start = pos;
-                    if(start < 285 && that.animationOn){
+                    if(start < 380 && that.animationOn){
                         animationLoop()
                     }
-                    else if (start > 284 && that.animationOn){
+                    else if (start > 379 && that.animationOn){
                         that.animationOff
                         that.parentElement.select("#playBtn")
                 .attr("class", "play_button");
