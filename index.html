@@ -99,8 +99,6 @@
             <div id="countVis">
               <img src="images/legend.png" class="legend" id="legend">
               <img src="images/legend_2.png" class="legend" id="legend2">
-              <p class="instr" id="instr1">SELECT A COUNTRY ON THE MAP<br>TO VIEW ITS ENERGY PROFILE</p>
-              <p class="instr" id="instr2">SELECT A COUNTRY ON THE MAP<br>TO VIEW HOW IT COMPARES TO THE WORLD</p>
             </div>
         
   </br></br>
@@ -399,7 +397,7 @@
                       }
                     })
 
-                    //add new array of change in forest areas
+                    //add new array for change in forest area percentage
                     co2Data.forEach(function(d){
                       d.forest_change = [0]
                       for (var i = 1; i < 53; i++) {
@@ -407,6 +405,15 @@
                       }
                     })
 
+                    //add new array for change in population
+                    co2Data.forEach(function(d){
+                      d.pop_change = [d.pop[1]-d.pop[0]]
+                      for (var i = 1; i < 54; i++) {
+                        d.pop_change.push(d.pop[i]-d.pop[i-1]);
+                      }
+                    })
+
+                    console.log(co2Data);
                     //Store consolodated energy data in global variable
                     engData = cleanest_edata
 

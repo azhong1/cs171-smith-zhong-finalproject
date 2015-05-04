@@ -97,6 +97,12 @@ CountryUVis.prototype.initVis = function(){
       .attr("class", "area")
       .attr("transform", "translate("+this.margin.left+","+ 10+")")
 
+    this.parentElement.append("p")
+      .attr("class", "instr")
+      .attr("id", "instr1")
+      .style("display", "block")
+      .html("SELECT A COUNTRY ON THE MAP<br>TO VIEW ITS ENERGY PROFILE");
+      
 }
 
 

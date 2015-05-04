@@ -84,6 +84,12 @@ CountryPVis.prototype.initVis = function(){
         .attr("class", "y axis")
         .attr("transform", "translate(" +this.margin.left+ ", "+10+")")
 
+    this.parentElement.append("p")
+      .attr("class", "instr")
+      .attr("id", "instr2")
+      .style("display", "block")
+      .html("SELECT A COUNTRY ON THE MAP<br>TO VIEW HOW IT COMPARES TO THE WORLD");
+
 }
 
 

@@ -265,12 +265,16 @@ WorldVis.prototype.wrangleData_forest= function(){
     country_array = {}
 
     var forest_scale = d3.scale.linear()
-        .domain([-30, 50])
-        .rangeRound([200, 16]) //#66 to #cc
+        .domain([0, 65])
+        .rangeRound([200, 17]) //#66 to #cc
 
     var forest_scale_large = d3.scale.linear() //for the countries with anomalies
-        .domain([135069500/2, 1350695000])
-        .rangeRound([180, 17])
+        .domain([66, 75])
+        .rangeRound([102, 17])
+
+    var forest_scale_larger = d3.scale.linear() //for the countries with anomalies
+        .domain([76, 100])
+        .rangeRound([102, 17])
 
     that.data.forEach(function(d) {
         var tree = d.forest_change[current_year]*100
@@ -284,15 +288,23 @@ WorldVis.prototype.wrangleData_forest= function(){
             } else {
                 string = "#" + pop_scale(pop).toString(16) + "99" + "cc"
             }*/
-            if (forest_scale(tree) < 16 || forest_scale(tree) > 255) {
+            if (forest > 75) {
+                string = "#00" + forest_scale_larger(forest).toString(16) +"33";
+            } else if (forest > 65 && forest < 76) {
+                string = "#" + forest_scale_large(forest).toString(16) +"9966";
+            } else {
+                string = "#" + forest_scale(forest).toString(16) +"cc99"; 
+            
+            }
+            /*if (forest_scale(forest) < 16 || forest_scale(forest) > 255) {
                 if (tree < 0) {
                     string = "#ffcc99";
                 } else {
                     string = "#00cc99";
                 }
             } else {
-                string = "#" + forest_scale(tree).toString(16) +"cc99"; 
-            }
+                string = "#" + forest_scale(forest).toString(16) +"cc99"; 
+            }*/
             
 
             //console.log(string);
@@ -306,7 +318,7 @@ WorldVis.prototype.wrangleData_forest= function(){
         } else {
             var obj = {}
             obj["fillKey"] = d.country_id
-            fills_array[d.country_id] = '#B0C989'
+            fills_array[d.country_id] = '#BADEA2'
             country_array[d.country_id] = obj
 
         }
