@@ -192,7 +192,7 @@ a:active {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 20px;
     color:#990033;
-    letter-spacing: 3px;
+    letter-spacing: 1px;
     font-weight:400;
 }
 
@@ -201,7 +201,7 @@ a:active {
     margin-top: 10px;
     font-size: 20px;
     color:black;
-    letter-spacing: 3px;
+    letter-spacing: 1px;
     font-weight:400;
     text-align: center;
 }
@@ -321,7 +321,7 @@ a:active {
 .hover_heading {
     /*font-family: Georgia, serif;*/
     font-size: 18px;
-    letter-spacing: 3px;
+    letter-spacing: 1px;
     font-weight: 200;
 
 }
@@ -383,20 +383,123 @@ a:active {
 /*** CHAPTER ONE ****/
 .history_title {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    margin-top: 10px;
+    margin-top: 70px;
     font-size: 25px;
-    color:black;
+    color:grey;
     letter-spacing: 3px;
-    font-weight:400;
+    font-weight:200;
     text-align: center;
-    position:absolute;
 }
 
 .container_world {
-    position: relative;
     display: inline-block;
 }
 
+#gdpBtn, #popBtn {
+    position:absolute;
+}
+
+#gdpBtn {
+    left:875px;
+    top:460px;
+    z-index:1;
+}
+
+#popBtn {
+    left:1014px;
+    top:460px;
+    z-index:1;
+}
+
+.play_button, .play_button_on {
+    left:320px;
+    top:468px;
+    outline:none;
+    border-color:grey;
+    border-width:1px;
+    width:50px;
+    border-image: none;
+    border-bottom-style: solid;
+    border-right-style: solid;
+    background-size: 25px;
+    background-position: center;
+    color:rgba(0, 0, 0, 0);
+}
+
+.play_button:hover, .play_button_on:hover {
+    background-color: lightgrey;
+    border-color: lightgrey;
+    transition: all .15s ease;
+   -moz-transition: all .15s ease;
+   -o-transition: all .15s ease;
+   -webkit-transition: all .15s ease;
+}
+
+.play_button {
+    background: url("play.png") no-repeat;
+    background-size: 25px;
+    background-position: center;
+}
+
+.play_button_on {
+    background: url("pause.png") no-repeat;
+    background-size: 25px;
+    background-position: center;
+}
+
+#countVis {
+    margin-left: 285px;
+}
+
+#usage {
+    margin-right: 15px;
+}
+
+#compare {
+
+}
+
+.history_text {
+    position: absolute;
+    margin-top: 280px;
+    margin-left: 0px;
+    width:270px;
+    height:449px;
+    background-color: #F5F5F5;
+}
+
+.history_btn, .btn_on {
+    outline:none;
+    border-color:grey;
+    border-width:1px;
+    
+    font-size: 12px;
+    letter-spacing: 2px;
+    width:120px;
+    border-image: none;
+    border-bottom-style: solid;
+    border-right-style: solid;
+}
+
+.history_btn {
+    background-color: white;
+    color: grey;
+}
+
+.history_btn:hover {
+    border-color: lightgrey;
+    background-color: lightgrey;
+    color:white;
+    transition: all .15s ease;
+   -moz-transition: all .15s ease;
+   -o-transition: all .15s ease;
+   -webkit-transition: all .15s ease;
+}
+
+.btn_on {
+    background-color: grey;
+    color: white;
+}
 
 /***axes formatting ****/
 .axis text {

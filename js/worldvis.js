@@ -11,7 +11,7 @@ WorldVis = function(_parentElement, _data, _eventHandler){
     // define all "constants" 
     this.margin = {top: 20, right: 0, bottom: 30, left: 70},
     this.width = 1100 
-    this.height = 600
+    this.height = 510
     this.year = 1960
 
     this.initVis();
@@ -27,9 +27,10 @@ WorldVis.prototype.initVis = function(){
 
 	//append svg element
 	this.svg = this.parentElement.append("svg")
-      .attr("width", this.width)
+      .attr("width", "100%")
       .attr("id", "map")
       .attr("height", this.height)
+      .style("background-color", "none")
       .append("g")
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
         
@@ -269,11 +270,11 @@ WorldVis.prototype.addSlider = function(svg){
     //Scale slider position values to year values
     var sliderScale = d3.scale.linear()
 
-    sliderScale.domain([0, 300])
+    sliderScale.domain([0, 380])
     sliderScale.rangeRound([1960,2012])
 
     var sliderDragged = function(){
-        var value = Math.max(0, Math.min(285,d3.event.x));
+        var value = Math.max(0, Math.min(380,d3.event.x));
 
         //update current year value
         that.year = sliderScale(value)
@@ -296,13 +297,13 @@ WorldVis.prototype.addSlider = function(svg){
 
     var sliderGroup = svg.append("g").attr({
         class:"sliderGroup",
-        "transform":"translate("+400+","+550+")"
+        "transform":"translate("+305+","+470+")"
     })
 
     sliderGroup.append("rect").attr({
         class:"sliderBg",
         x:5,
-        width:300,
+        width:380,
         height: 10
     }).style({
         fill:"lightgray"
@@ -321,9 +322,9 @@ WorldVis.prototype.addSlider = function(svg){
 
     this.parentElement.append("button").attr({
         "id": "playBtn",
-        "class": "btn btn-sm btn-info",
+        "class": "play_button",
         "transform": "translate(300,-100)",
-    }).text("Play")
+    }).text("Play").style("position", "absolute")
 
     this.animationOn = false;
 
@@ -335,7 +336,7 @@ WorldVis.prototype.addSlider = function(svg){
         
             //update button text
             that.parentElement.select("#playBtn")
-                .text("Pause")
+                .attr("class", "play_button_on")
 
             that.animationOn = true
 
@@ -368,7 +369,7 @@ WorldVis.prototype.addSlider = function(svg){
                     else if (start > 284 && that.animationOn){
                         that.animationOff
                         that.parentElement.select("#playBtn")
-                .           text("Play")
+                .attr("class", "play_button");
 
 
                     }
@@ -382,7 +383,7 @@ WorldVis.prototype.addSlider = function(svg){
 
             //update button text    
             that.parentElement.select("#playBtn")
-                    .text("Play")
+                    .attr("class", "play_button")
 
             //reset animation boolean to exit animation loop
             that.animationOn = false
@@ -399,39 +400,59 @@ WorldVis.prototype.addLinePlot = function(svg){
     
     var lineGroup = svg.append("g").attr({
         class:"lineGroup",
-        "transform":"translate("+400+","+450+")"
+        "transform":"translate("+311+","+390+")"
     })
 
     var linedata = []
 
     var years = [] 
     that.data.forEach(function(d){ if(d.name == "World") {years = d.years}})
+    console.log(that.data);
 
-    years.forEach(function(d,i){if (d>0){ linedata[i] = d}})
+    years.forEach(function(d,i){if (d>0){ linedata[i] = parseInt(d)}})
 
     var x = d3.scale.linear()
     var y = d3.scale.linear()
+    var opac = d3.scale.linear()
 
     var ymax = Math.max.apply(null, linedata)
     var ymin = d3.min(linedata, function(d){if (d > 0){ return d}})
 
     y.domain([0, ymax])
-    y.range([100, 0])
+    y.range([0, 70])
 
-    x.range([0,300])
+    x.range([0,380])
     x.domain([0, 53])
 
+    opac.domain([0, 53])
+    opac.range([0.3, 1])
 
     var line = d3.svg.line()
     .x(function(d, i) {return x(i); })
     .y(function(d) { return y(d); });
 
-    lineGroup.append("path")
+    /*lineGroup.append("path")
     	.datum(linedata)
     	.attr("class", "line")
     	.attr("d", line)
         .attr("fill", "none")
         .attr("stroke", "black")
-        .attr("stroke-width", "1.5px")
+        .attr("stroke-width", "0px");*/
+
+    console.log(linedata);
+
+    lineGroup.selectAll("rect")
+        .data(linedata)
+      .enter().append("rect")
+        .attr("class", "co2_bar")
+        .style("fill", "#990033")
+        .style("opacity", function(d, i) {return opac(i);})
+        .attr("height", function(d){return y(d);})
+        .attr("width", 6)
+        .attr("x", function(d,i) {return x(i); })
+        .attr("y", function(d){return 80 - y(d);})
+        .on("mouseover", function(d, i) {
+          console.log(i)});
+
 }
 
