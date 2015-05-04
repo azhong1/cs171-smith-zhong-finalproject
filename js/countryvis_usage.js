@@ -33,8 +33,11 @@ CountryUVis.prototype.initVis = function(){
         .attr("height", this.height + this.margin.top +this.margin.bottom)
         .attr("id", "usage")
         .style("background-color", "#F5F5F5")
+      .append("svg")
+      .attr("width", this.width + this.margin.right + this.margin.left - 15)
+        .attr("height", this.height + this.margin.top +this.margin.bottom)
       .append("g")
-        .attr("transform", "translate(0," + 0 + ")")
+        .attr("transform", "translate(20," + 8 + ")")
 
 
     // filter, aggregate, modify data
@@ -42,7 +45,7 @@ CountryUVis.prototype.initVis = function(){
 
     // creates axis and scales
     this.x = d3.scale.linear()
-      .range([0, this.width]);
+      .range([0, this.width - 35]);
 
     this.y = d3.scale.linear()
       .range([this.height, 0]);
@@ -94,7 +97,6 @@ CountryUVis.prototype.initVis = function(){
       .attr("class", "area")
       .attr("transform", "translate("+this.margin.left+","+ 10+")")
 
-
 }
 
 
@@ -120,7 +122,10 @@ CountryUVis.prototype.updateVis = function(){
         this.svg.selectAll(".y.axis").style("display", "none")
         this.svg.selectAll(".area").style("display", "none")
 
-        d3.selectAll(".instr").style("display", "").text("No Data For Selection, Please Choose Again")
+        d3.selectAll("#instr1").style("display", "").html("NO ENERGY DATA FOR SELECTION.<br> PLEASE CHOOSE AGAIN.");
+        d3.selectAll("#legend").style("display", "none");
+        d3.selectAll("#instr1").style("margin-left", "-5px");
+
 
     }
 
@@ -129,7 +134,10 @@ CountryUVis.prototype.updateVis = function(){
     this.svg.selectAll(".area").style("display", "")
     this.svg.selectAll(".x.axis").style("display", "")
     this.svg.selectAll(".y.axis").style("display", "")
-    d3.selectAll(".instr").style("display", "").text("Energy Use for "+ this.metaData +"")
+    d3.selectAll(".history_text").style("display", "").text("Country selected: "+ this.metaData +"")
+    d3.selectAll("#instr1").style("display", "none")
+    d3.selectAll("#legend").style("display", "block");
+    //d3.selectAll("#instr1").style("margin-left", "0px");
 
     
     var ymax = Math.max.apply(null, that.totalData)
@@ -153,7 +161,7 @@ CountryUVis.prototype.updateVis = function(){
     path.enter()
       .append("path")
       .attr("class", "area")
-      .attr("fill", "#663300")
+      .attr("fill", "#7D684C")
 
     path
       .transition()
@@ -168,7 +176,7 @@ CountryUVis.prototype.updateVis = function(){
     path2.enter()
       .append("path")
       .attr("class", "area")
-      .attr("fill", "#009933")
+      .attr("fill", "#64993C")
 
     path2
       .transition()
@@ -183,7 +191,7 @@ CountryUVis.prototype.updateVis = function(){
     path3.enter()
       .append("path")
       .attr("class", "area")
-      .attr("fill", "#ccff66")
+      .attr("fill", "#A6C259")
 
     path3
       .transition()
@@ -208,7 +216,7 @@ CountryUVis.prototype.onSelectionChange= function (country){
                     else {return false}
                 }
 
-    d3.selectAll(".instr").style("display", "none")
+    d3.selectAll("#instr1").style("display", "none")
 
      // call wrangle function and update view
     this.wrangleData(filter);

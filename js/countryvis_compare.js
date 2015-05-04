@@ -33,18 +33,21 @@ CountryPVis.prototype.initVis = function(){
         .attr("height", this.height + this.margin.top +this.margin.bottom)
         .attr("id", "compare")
         .style("background-color", "#F5F5F5")
+      .append("svg")
+      .attr("width", this.width + this.margin.right + this.margin.left - 15)
+        .attr("height", this.height + this.margin.top +this.margin.bottom)
       .append("g")
-        .attr("transform", "translate(0," + this.margin.top + ")")
+        .attr("transform", "translate(0," + 18 + ")")
 
     // filter, aggregate, modify data
     this.wrangleData();
 
     // creates axis and scales
     this.x = d3.scale.linear()
-      .range([0, this.width]);
+      .range([0, this.width-15]);
 
     this.y = d3.scale.linear()
-      .range([this.height, 0]);
+      .range([this.height-10, 0]);
 
     this.color = d3.scale.category20();
 
@@ -55,6 +58,7 @@ CountryPVis.prototype.initVis = function(){
 
     this.yAxis = d3.svg.axis()
       .scale(this.y)
+      .ticks(8)
       .orient("left");
 
       yearscale = d3.scale.ordinal()
@@ -74,7 +78,7 @@ CountryPVis.prototype.initVis = function(){
         // Add axes visual elements
      this.svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate("+this.margin.left+"," + (this.height + 10)+")")
+        .attr("transform", "translate("+this.margin.left+"," + (this.height)+")")
 
     this.svg.append("g")
         .attr("class", "y axis")
@@ -102,20 +106,24 @@ CountryPVis.prototype.updateVis = function(){
 
     if (this.displayData == null){
 
+        console.log("null");
+
         this.svg.selectAll(".x.axis").style("display", "none")
         this.svg.selectAll(".y.axis").style("display", "none")
-        this.svg.selectAll(".area").style("display", "none")
-
-        // this.svg.selectAll(".instr").style("display", "").text("No Data For Selection, Please Choose Again")
+        this.svg.selectAll(".lineContainer").style("display", "none")
+        d3.selectAll("#instr2").style("margin-left", "65px");
+        d3.selectAll("#instr2").style("display", "").html("NO DATA FOR SELECTION.<br> PLEASE CHOOSE AGAIN.");
+        d3.selectAll("#legend2").style("display", "none");
 
     }
 
     else{
-
+    d3.selectAll("#instr2").style("display", "none")
     this.svg.selectAll(".area").style("display", "")
     this.svg.selectAll(".x.axis").style("display", "")
+    d3.selectAll(".history_text").style("display", "").text("Country selected: "+ this.metaData +"")
     this.svg.selectAll(".y.axis").style("display", "")
-    // this.svg.selectAll(".instr").style("display", "").text("Energy Use for "+ this.metaData +"")
+    d3.selectAll("#legend2").style("display", "block");
 
   
     var ymax = 0
@@ -135,7 +143,7 @@ CountryPVis.prototype.updateVis = function(){
     this.svg.select(".y.axis")
         .call(this.yAxis)
 
-    var color = ["#663300", "#009933", "#ccff66"]
+    var color = ["#7D684C", "#64993C", "#A6C259"]
 
     this.svg.selectAll(".lineContainer").remove()
 
@@ -153,6 +161,7 @@ CountryPVis.prototype.updateVis = function(){
       .append("path")
       .attr("d", function(d){return that.line(d.values)})
       .attr("fill", "none")
+      .style("stroke-width", 1.5)
       .style("stroke", function(d,i){return color[i];});
 
     path.exit()
