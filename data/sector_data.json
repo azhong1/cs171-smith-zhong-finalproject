@@ -4,7 +4,7 @@
 		{"source":"Petroleum","target":"Industrial","value":"23"},
 		{"source":"Petroleum","target":"Residential & Commercial","value":"5"},
 		{"source":"Petroleum","target":"Electric Power","value":"1"},
-		{"source":"Petroleum","target":"Industry","value":"23"},
+		{"source":"Petroleum","target":"Industrial","value":"23"},
 		{"source":"Natural Gas","target":"Transportation","value":"3"},
 		{"source":"Natural Gas","target":"Industrial","value":"33"},
 		{"source":"Natural Gas","target":"Residential & Commercial","value":"32"},

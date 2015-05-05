@@ -11,7 +11,9 @@
     <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
     <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
     <script src="dm/dist/datamaps.world.min.js"></script>
+    <script src="libs/d3/sankey.js"></script>
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
     <!--Stylesheets-->
     <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
@@ -119,8 +121,10 @@
       <div id="sectorVis">
       WHERE YOUR EMISSIONS ARE FROM
     </div>
+    <div id="sankey_basic" style="width: 900px; height: 300px;"></div>
     </div>
     <script>
+      hello();
         //to fade things in
         var fs = 1000;
         var fs_2 = 0;
@@ -155,10 +159,11 @@
                 var count_usage_vis = new CountryUVis(d3.select("#countVis"), engData);
                 var count_comp_vis = new CountryPVis(d3.select("#countVis"), engData, co2Data);
                 var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);  
-                var circle_vis = new CircleVis(d3.select("#circleVis"), co2Data);
+                //var circle_vis = new CircleVis(d3.select("#circleVis"), co2Data);
                 //var sector_vis = new SectorVis(d3.select("#sectorVis"), sectorData);
 
-                console.log(sectorData);
+
+                console.log(co2Data);
 
                 // Bind the eventHandler to the Vis Objects
                 $(MyEventHandler).bind("selectionChanged", function(event, selection){
