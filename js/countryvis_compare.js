@@ -6,8 +6,7 @@
 CountryPVis = function(_parentElement, _co2data){
 	this.parentElement = _parentElement;
     this.data = _co2data
-    this.co2data = _co2data
-    this.worldco2 = this.initData(_co2data)
+
     this.displayData = null
 
     // define all "constants" 
@@ -228,25 +227,6 @@ CountryPVis.prototype.updateVis = function(){
     path.exit()
       .remove();
 
-    // var container2 = this.svg.append("g")
-    //   .attr("class", "lineContainer")
-    //   .attr("transform", "translate("+this.margin.left+","+ 10+")")
-
-
-    // // updates graph
-    // var path2 = container2.selectAll(".line")
-    //   .data(this.displayData[1])
-    //   .attr("class", "line")
-
-    // path2.enter()
-    //   .append("path")
-    //   .attr("d", function(d){return that.line_pop(d.values)})
-    //   .attr("fill", "none")
-    //   .style("stroke-width", 1.5)
-    //   .style("stroke", "#64993C");
-
-    // path2.exit()
-    //   .remove();
 
 
   }
@@ -288,17 +268,11 @@ CountryPVis.prototype.filterAndAggregate = function(_filter){
 
     var gdp = []
     var pop = []
-    var co2 = []
 
-    this.co2data.forEach(function(d){
+    this.data.forEach(function(d){
         if (filter(d)){
 
         that.metaData = d.name
-
-        co2 = d.years.map(function(d,i){if (d> 0) {return d/that.worldco2.years[i] * 100} else {return null;}})
-
-        gdp = d.gdp.map(function(d,i){if (d> 0) {return d/that.worldco2.gdp[i] * 100} else {return null;}})
-        pop = d.pop.map(function(d,i){if (d> 0 && that.worldco2.pop[i] > 0) { return d/that.worldco2.pop[i] * 100 } else {return null;}})
 
        var emissions_gdp = fixup(d.gdp,d.years).map(function(d){return 1000000*d});
        var emissions_pop = fixup(d.pop, d.years).map(function(d){return 1000*d});
@@ -323,13 +297,3 @@ CountryPVis.prototype.filterAndAggregate = function(_filter){
     }
 
 }
-
-CountryPVis.prototype.initData = function(data){
-
-  var world 
-
-  data.forEach(function(d){ if (d.name == "World") { world = d;}})
-  
-  return world
-}
-
