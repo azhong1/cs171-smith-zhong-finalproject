@@ -52,9 +52,15 @@ WorldVis.prototype.initVis = function(){
         .style("display", "block")
 
     //add text block on left
-    this.parentElement.append("div")
+    this.country_text = this.parentElement.append("div")
         .attr("class", "history_text")
-        .text("here is where info will go")
+    
+    this.country_text.append("text")
+        .attr("id", "country_text")
+        .text("here is where info will go. ")
+    this.country_text.append("text")
+        .attr("id", "year_text")
+        .text("Year.")
 
     //add buttons
     this.parentElement.append("button")
@@ -71,6 +77,11 @@ WorldVis.prototype.initVis = function(){
         .attr("class", "history_btn")
         .attr("id", "forestBtn")
         .text("FOREST %")
+
+    this.parentElement.append("button")
+        .attr("class", "history_btn")
+        //.attr("id", "forestBtn")
+        .text("70's")
 
         
     //instantiate world map
@@ -436,7 +447,9 @@ WorldVis.prototype.wrangleData_forest= function(){
 WorldVis.prototype.updateVis = function(){
     var that = this
 
+    console.log(this.year);
 
+    d3.select("#year_text").text("Year: "+ this.year);
 
     // update circles
     this.map.bubbles(this.displayData); //, {highlightOnHover: false});
@@ -647,13 +660,13 @@ WorldVis.prototype.addLinePlot = function(svg){
     .x(function(d, i) {return x(i); })
     .y(function(d) { return y(d); });
 
-    /*lineGroup.append("path")
+    lineGroup.append("path")
         .datum(linedata)
         .attr("class", "line")
         .attr("d", line)
         .attr("fill", "none")
         .attr("stroke", "black")
-        .attr("stroke-width", "0px");*/
+        .attr("stroke-width", "0px");
 
     lineGroup.selectAll("rect")
         .data(linedata)

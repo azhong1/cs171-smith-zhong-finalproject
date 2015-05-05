@@ -156,7 +156,7 @@ CountryUVis.prototype.updateVis = function(){
     this.svg.selectAll(".area").style("display", "")
     this.svg.selectAll(".x.axis").style("display", "")
     this.svg.selectAll(".y.axis").style("display", "")
-    d3.selectAll(".history_text").style("display", "").text("Country selected: "+ this.metaData +"")
+    d3.selectAll("#country_text").style("display", "").text("Country selected: "+ this.metaData +". ")
     d3.selectAll("#instr1").style("display", "none")
     d3.selectAll("#legend").style("display", "block");
     d3.selectAll("#chart_label1").style("display", "block");
