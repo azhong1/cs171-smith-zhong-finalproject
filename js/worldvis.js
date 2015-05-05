@@ -8,6 +8,8 @@ WorldVis = function(_parentElement, _data, _eventHandler){
     this.data = _data;
     this.eventHandler = _eventHandler;
     this.init = false
+    this.mouseon = null
+    this.mouseon_data = null
 
     // define all "constants" 
     this.margin = {top: 20, right: 0, bottom: 30, left: 70},
@@ -126,7 +128,7 @@ WorldVis.prototype.wrangleData_gdp= function(){
                 d.radius = 0
             }
             
-            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, 
+            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, "me":""+d.country_id+"_bub", 
                 "code": d.country_id, "emissions": d.years[current_year], "name": d.name,"borderWidth": 0, "fillOpacity": 0.5})
 
         }
@@ -216,7 +218,7 @@ WorldVis.prototype.wrangleData_pop= function(){
             } else {
                 d.radius = 0
             }
-            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, 
+            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, "me":""+d.country_id+"_bub",                
                 "code": d.country_id, "emissions": d.years[current_year], "name": d.name, "borderWidth": 0, "fillOpacity": 0.5})
 
         }
@@ -344,7 +346,7 @@ WorldVis.prototype.wrangleData_forest= function(){
                 d.radius = 0
             }
             
-            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, 
+            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, "me":""+d.country_id+"_bub",
                 "code": d.country_id, "emissions": d.years[current_year], "name": d.name,"borderWidth": 0, "fillOpacity": 0.5})
 
         }
@@ -429,10 +431,29 @@ WorldVis.prototype.updateVis = function(){
     this.map.updateChoropleth(
         this.displayData.fills_array);
 
-    d3.selectAll(".datamaps-bubble")
+    //Add tooltips to bubbles
+    d3.selectAll(".datamaps-bubble") 
+       .attr("id", function(d){ return ""+d.code+"_bub";})
        .style("fill", "#990033")
-       .text(function(d){console.log(d)});
+       .on("mouseover", function(d){
 
+        var circle = this
+
+        that.mouseon = circle
+
+
+        that.updateTooltip(circle)
+        
+
+        })
+
+       .on("mouseout", function(d){
+
+        that.mouseon = null
+
+        d3.select(".tooltip_bubbles")
+            .style("visibility", "hidden");
+          });
     
 
 }
@@ -551,10 +572,12 @@ WorldVis.prototype.addSlider = function(svg){
 
                     if (that.toggle == 0) {
                         that.wrangleData_gdp();
+                        that.updateTooltip(that.mouseon)
                     } else if (that.toggle == 1) {
                         that.wrangleData_pop();
                     } else {
-                        that.wrangleData_forest();
+                        that.wrangleData_forest()
+                        that.updateTooltip(that.mouseon)
                     }
 
                     start = pos;
@@ -625,13 +648,6 @@ WorldVis.prototype.addLinePlot = function(svg){
     .x(function(d, i) {return x(i); })
     .y(function(d) { return y(d); });
 
-    /*lineGroup.append("path")
-        .datum(linedata)
-        .attr("class", "line")
-        .attr("d", line)
-        .attr("fill", "none")
-        .attr("stroke", "black")
-        .attr("stroke-width", "0px");*/
 
     lineGroup.selectAll("rect")
         .data(linedata)
@@ -647,4 +663,43 @@ WorldVis.prototype.addLinePlot = function(svg){
       //    console.log(i)
       });
 
+}
+
+//function to update bubbles tooltip
+WorldVis.prototype.updateTooltip = function(circle){
+
+    var that = this
+
+    //check if mouseis on a circle
+    if (!circle){}
+    else{
+    
+    var obj =  JSON.parse(circle.getAttribute("data-info"))
+
+    var id = circle.getAttribute("id")
+    var circ = d3.select("#"+id+"")
+    var emissions 
+    var name
+
+    circ.each(function(d){emissions = d.emissions; name = d.name})
+
+    console.log(emissions)
+    console.log(name)
+
+
+
+        d3.select(".tooltip_bubbles")
+            .style("left", circle.getAttribute("cx")+"px")
+            .style("top", circle.getAttribute("cy") +"px" )
+            .style("visibility", "visible")
+            .text("")
+            .append("p")
+            .style("font-weight", "bold")
+            .text(name)
+            .append("p")
+            .style("font-weight","normal")
+            .text("Year: "+ that.year+"")
+            .append("p")
+            .text("Emissions: "+ parseInt(emissions) +" kt CO2")
+    }
 }
