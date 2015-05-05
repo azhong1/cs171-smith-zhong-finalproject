@@ -9,7 +9,7 @@ WorldVis = function(_parentElement, _data, _eventHandler){
     this.eventHandler = _eventHandler;
     this.init = false
     this.mouseon = null
-    this.mouseon_data = null
+
 
     // define all "constants" 
     this.margin = {top: 20, right: 0, bottom: 30, left: 70},
@@ -52,6 +52,39 @@ WorldVis.prototype.initVis = function(){
         .attr("class", "key")
         .attr("id", "key_gdp")
         .style("display", "block")
+
+    //add text block on left
+    this.country_text = this.parentElement.append("div")
+        .attr("class", "history_text")
+    
+    this.country_text.append("text")
+        .attr("id", "country_text")
+        .text("here is where info will go. ")
+    this.country_text.append("text")
+        .attr("id", "year_text")
+        .text("Year.")
+
+    //add buttons
+    this.parentElement.append("button")
+        .attr("class", "btn_on")
+        .attr("id", "gdpBtn")
+        .text("GDP")
+
+    this.parentElement.append("button")
+        .attr("class", "history_btn")
+        .attr("id", "popBtn")
+        .text("POPULATION")
+
+    this.parentElement.append("button")
+        .attr("class", "history_btn")
+        .attr("id", "forestBtn")
+        .text("FOREST %")
+
+    this.parentElement.append("button")
+        .attr("class", "history_btn")
+        //.attr("id", "forestBtn")
+        .text("70's")
+
         
     //instantiate world map
     this.map = new Datamap({element: document.getElementById('map'),
@@ -128,7 +161,7 @@ WorldVis.prototype.wrangleData_gdp= function(){
                 d.radius = 0
             }
             
-            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, "me":""+d.country_id+"_bub", 
+            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, 
                 "code": d.country_id, "emissions": d.years[current_year], "name": d.name,"borderWidth": 0, "fillOpacity": 0.5})
 
         }
@@ -218,7 +251,7 @@ WorldVis.prototype.wrangleData_pop= function(){
             } else {
                 d.radius = 0
             }
-            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, "me":""+d.country_id+"_bub",                
+            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius,               
                 "code": d.country_id, "emissions": d.years[current_year], "name": d.name, "borderWidth": 0, "fillOpacity": 0.5})
 
         }
@@ -346,7 +379,7 @@ WorldVis.prototype.wrangleData_forest= function(){
                 d.radius = 0
             }
             
-            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, "me":""+d.country_id+"_bub",
+            that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, 
                 "code": d.country_id, "emissions": d.years[current_year], "name": d.name,"borderWidth": 0, "fillOpacity": 0.5})
 
         }
@@ -416,7 +449,9 @@ WorldVis.prototype.wrangleData_forest= function(){
 WorldVis.prototype.updateVis = function(){
     var that = this
 
+    console.log(this.year);
 
+    d3.select("#year_text").text("Year: "+ this.year);
 
     // update circles
     this.map.bubbles(this.displayData); //, {highlightOnHover: false});
@@ -648,6 +683,14 @@ WorldVis.prototype.addLinePlot = function(svg){
     .x(function(d, i) {return x(i); })
     .y(function(d) { return y(d); });
 
+    lineGroup.append("path")
+        .datum(linedata)
+        .attr("class", "line")
+        .attr("d", line)
+        .attr("fill", "none")
+        .attr("stroke", "black")
+        .attr("stroke-width", "0px");
+
 
     lineGroup.selectAll("rect")
         .data(linedata)
@@ -682,9 +725,6 @@ WorldVis.prototype.updateTooltip = function(circle){
     var name
 
     circ.each(function(d){emissions = d.emissions; name = d.name})
-
-    console.log(emissions)
-    console.log(name)
 
 
 

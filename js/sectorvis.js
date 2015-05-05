@@ -1,12 +1,12 @@
-function hello() {
+function sankey() {
 
 var new_data = []; // a global
 
-d3.json("data/sector_data_normalized.json", function(error, json) {
+d3.json("data/sector_data.json", function(error, json) {
   if (error) return console.warn(error);
   var data = json;
 
-  data.links.forEach(function(d) {
+  data.links_normalized.forEach(function(d) {
     //console.log(d, d.value);
     /*if (d.source == "Coal") {d.value = (d.value/100)*20;}
     else if (d.source == "Nuclear") {d.value = (d.value/100)*8;}
@@ -33,7 +33,8 @@ google.load("visualization", "1.1", {packages:["sankey"]});
 
         // Sets chart options.
         var options = {
-          width: 1000,
+          sankey: { node: { nodePadding: 2 } ,
+                    link: { color: { fill: "#C7C9C9" } } },
         };
 
         // Instantiates and draws our chart, passing in some options.
@@ -41,3 +42,4 @@ google.load("visualization", "1.1", {packages:["sankey"]});
         chart.draw(data, options);
       }
 }
+
