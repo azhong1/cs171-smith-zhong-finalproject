@@ -132,8 +132,9 @@ WorldVis.prototype.initVis = function(){
 
     d3.selectAll(".datamaps-hoverover").style("display", "block");
 
+
     //instantiate world totals line plot
-    this.addLinePlot()
+    this.addLinePlot("WLD")
 
     //add slider
     this.addSlider(this.svg)
@@ -679,6 +680,9 @@ WorldVis.prototype.addSlider = function(svg){
 WorldVis.prototype.addLinePlot = function(country){
     var that = this;
     console.log(country);
+    
+    this.svg.selectAll(".lineGroup").remove()
+
     var lineGroup = this.svg.append("g").attr({
         class:"lineGroup",
         "transform":"translate("+321+","+390+")"
@@ -706,19 +710,6 @@ WorldVis.prototype.addLinePlot = function(country){
 
     opac.domain([0, 53])
     opac.range([0.3, 1])
-
-    var line = d3.svg.line()
-    .x(function(d, i) {return x(i); })
-    .y(function(d) { console.log(d); return y(d); });
-
-    /*lineGroup.append("path")
-        .datum(linedata)
-        .attr("class", "line")
-        .attr("d", line)
-        .attr("fill", "none")
-        .attr("stroke", "black")
-        .attr("stroke-width", "0px");*/
-
     
     var rects = lineGroup.selectAll("rect.co2_bar")
         .data(linedata)
