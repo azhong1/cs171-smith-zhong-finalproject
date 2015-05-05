@@ -61,7 +61,7 @@ WorldVis.prototype.initVis = function(){
         },
         bubblesConfig: {
             highlightBorderWidth: 0,
-            highlightFillColor: "#990033"
+            highlightFillColor: "#990033",
         },
         fills: {
             defaultFill: '#E0E0E0'
@@ -127,7 +127,7 @@ WorldVis.prototype.wrangleData_gdp= function(){
             }
             
             that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, 
-                "code": d.country_id, "borderWidth": 0, "fillOpacity": 0.5})
+                "code": d.country_id, "emissions": d.years[current_year], "name": d.name,"borderWidth": 0, "fillOpacity": 0.5})
 
         }
     })
@@ -135,7 +135,6 @@ WorldVis.prototype.wrangleData_gdp= function(){
     //wrangle data for fill colors and country codes
     fills_array = {}
     country_array = {}
-    //console.log(that.data);
 
     var gdp_scale = d3.scale.linear()
         .domain([0, 16163200000000/10])
@@ -147,7 +146,6 @@ WorldVis.prototype.wrangleData_gdp= function(){
 
     var array = [90]
     for (var i = 0; i < 1; i++) {
-        console.log(red_scale.invert(array[i]))
     }
 
     that.data.forEach(function(d) {
@@ -156,7 +154,6 @@ WorldVis.prototype.wrangleData_gdp= function(){
         if (gdp > -1 && d.longitude != -1 && d.latitude != -1) {
             if (gdp > 16163200000000/10) {
                 string = "#ff" + red_scale(gdp).toString(16) + "66";
-                console.log(red_scale(gdp)) 
             } else {
                 string = "#ff" + gdp_scale(gdp).toString(16) + "66"
             }
@@ -210,6 +207,7 @@ WorldVis.prototype.wrangleData_pop= function(){
         x.range([3, 80])
 
 
+
     //wrangle data for bubbles
     this.data.forEach(function(d){
         if (d.longitude != -1 && d.latitude != -1){
@@ -218,9 +216,8 @@ WorldVis.prototype.wrangleData_pop= function(){
             } else {
                 d.radius = 0
             }
-            
             that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, 
-                "code": d.country_id, "borderWidth": 0, "fillOpacity": 0.5})
+                "code": d.country_id, "emissions": d.years[current_year], "name": d.name, "borderWidth": 0, "fillOpacity": 0.5})
 
         }
     })
@@ -316,7 +313,6 @@ WorldVis.prototype.wrangleData_pop= function(){
   */
 WorldVis.prototype.wrangleData_forest= function(){
 
-    console.log(this.data);
     var that = this
 
     this.toggle = 2
@@ -349,7 +345,7 @@ WorldVis.prototype.wrangleData_forest= function(){
             }
             
             that.displayData.push({"latitude": d.latitude, "longitude": d.longitude, "radius": d.radius, 
-                "code": d.country_id, "borderWidth": 0, "fillOpacity": 0.5})
+                "code": d.country_id, "emissions": d.years[current_year], "name": d.name,"borderWidth": 0, "fillOpacity": 0.5})
 
         }
     })
@@ -386,13 +382,11 @@ WorldVis.prototype.wrangleData_forest= function(){
             
             }
 
-            //console.log(string);
             
             var obj = {}
             obj["fillKey"] = d.country_id
             fills_array[d.country_id] = string
             country_array[d.country_id] = obj
-            //console.log(obj)
 
         } else {
             var obj = {}
@@ -423,7 +417,7 @@ WorldVis.prototype.updateVis = function(){
 
 
     // update circles
-    this.map.bubbles(this.displayData, {exitDelay: 0}); //, {highlightOnHover: false});
+    this.map.bubbles(this.displayData); //, {highlightOnHover: false});
     //geographyConfig: {
         //    popupOnHover: false,
         //    highlightOnHover: false
@@ -436,7 +430,8 @@ WorldVis.prototype.updateVis = function(){
         this.displayData.fills_array);
 
     d3.selectAll(".datamaps-bubble")
-       .style("fill", "#990033");
+       .style("fill", "#990033")
+       .text(function(d){console.log(d)});
 
     
 
