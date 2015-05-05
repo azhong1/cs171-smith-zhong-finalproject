@@ -609,7 +609,9 @@ WorldVis.prototype.addSlider = function(svg){
                         that.wrangleData_gdp();
                         that.updateTooltip(that.mouseon)
                     } else if (that.toggle == 1) {
-                        that.wrangleData_pop();
+                        that.wrangleData_pop()
+                        that.updateTooltip(that.mouseon)
+
                     } else {
                         that.wrangleData_forest()
                         that.updateTooltip(that.mouseon)
