@@ -37,14 +37,14 @@ CountryPVis.prototype.initVis = function(){
       .attr("width", this.width + this.margin.right + this.margin.left - 15)
         .attr("height", this.height + this.margin.top +this.margin.bottom)
       .append("g")
-        .attr("transform", "translate(0," + 18 + ")")
+        .attr("transform", "translate(-10," + 18 + ")")
 
     // filter, aggregate, modify data
     this.wrangleData();
 
     // creates axis and scales
     this.x = d3.scale.linear()
-      .range([0, this.width-15]);
+      .range([0, this.width-5])
 
     this.y = d3.scale.linear()
       .range([this.height-10, 0]);
@@ -54,12 +54,14 @@ CountryPVis.prototype.initVis = function(){
     this.xAxis = d3.svg.axis()
       .scale(this.x)
       .orient("bottom")
-      .tickFormat(d3.format("d"));
+      .tickFormat(d3.format("d"))
+      .tickSize(-this.height, 0, 0);
 
     this.yAxis = d3.svg.axis()
       .scale(this.y)
       .ticks(8)
-      .orient("left");
+      .orient("left")
+      .tickSize(-this.width, 0, 0);;
 
       yearscale = d3.scale.ordinal()
 
@@ -89,6 +91,20 @@ CountryPVis.prototype.initVis = function(){
       .attr("id", "instr2")
       .style("display", "block")
       .html("SELECT A COUNTRY ON THE MAP<br>TO VIEW HOW IT COMPARES TO THE WORLD");
+
+
+    //add axis label
+    this.svg.append("g")
+      .append("text")
+        .attr("class", "chart_label")
+        .attr("id", "chart_label2")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -20)
+        .attr("y", 25)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .style("display", "none")
+        .text("Energy Consumption (kt)");
 
 }
 
@@ -120,6 +136,7 @@ CountryPVis.prototype.updateVis = function(){
         d3.selectAll("#instr2").style("margin-left", "65px");
         d3.selectAll("#instr2").style("display", "").html("NO DATA FOR SELECTION.<br> PLEASE CHOOSE AGAIN.");
         d3.selectAll("#legend2").style("display", "none");
+        d3.selectAll("#chart_label2").style("display", "none");
 
     }
 
@@ -130,6 +147,7 @@ CountryPVis.prototype.updateVis = function(){
     d3.selectAll(".history_text").style("display", "").text("Country selected: "+ this.metaData +"")
     this.svg.selectAll(".y.axis").style("display", "")
     d3.selectAll("#legend2").style("display", "block");
+    d3.selectAll("#chart_label2").style("display", "block");
 
   
     var ymax = 0

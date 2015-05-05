@@ -98,7 +98,7 @@ WorldVis.prototype.wrangleData_gdp= function(){
     this.toggle = 0
 
     //update country hover color
-    this.map.options.geographyConfig["highlightFillColor"] = "#FC8D59";
+    this.map.options.geographyConfig["highlightFillColor"] = "#cc3300";
 
     //update color key
     d3.select("#key_gdp").style("display", "block");
@@ -472,7 +472,7 @@ WorldVis.prototype.addSlider = function(svg){
     sliderScale.rangeRound([1960,2010])
 
     var sliderDragged = function(){
-        var value = Math.max(0, Math.min(350,d3.event.x));
+        var value = Math.max(0, Math.min(353,d3.event.x));
 
         //update current year value
         that.year = sliderScale(value)
@@ -512,7 +512,7 @@ WorldVis.prototype.addSlider = function(svg){
     sliderGroup.append("rect").attr({
         "class":"sliderHandle",
         x: 0,
-        width:20,
+        width:8,
         height:10,
         rx:2,
         ry:2
@@ -556,21 +556,20 @@ WorldVis.prototype.addSlider = function(svg){
 
                     if (that.toggle == 0) {
                         that.wrangleData_gdp();
-                    } 
-                    else if (that.toggle == 1) {
+                    } else if (that.toggle == 1) {
                         that.wrangleData_pop();
                     } else {
                         that.wrangleData_forest();
                     }
 
                     start = pos;
-                    if(start < 360 && that.animationOn){
+                    if(start < 354 && that.animationOn){
                         animationLoop()
                     }
-                    else if (start > 359 && that.animationOn){
+                    else if (start > 353 && that.animationOn){
                         that.animationOff
                         that.parentElement.select("#playBtn")
-                .attr("class", "play_button");
+                            .attr("class", "play_button");
 
 
                     }

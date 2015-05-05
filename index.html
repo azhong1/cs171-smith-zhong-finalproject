@@ -28,6 +28,7 @@
     <script src = "js/countryvis_compare.js"></script>
     <script src = "js/circlevis.js"></script>
     <script src = "js/temperaturevis.js"></script>
+    <script src = "js/sectorvis.js"></script>
 
 </head>
 <body>
@@ -98,8 +99,9 @@
               <img src="images/legend.png" class="legend" id="legend">
               <img src="images/legend_2.png" class="legend" id="legend2">
             </div>
-        
-  </br></br>
+    </div>
+    <div class="container">
+      <br><br>
         <div class="row">
             <div id="circleVis">
               Node Size:
@@ -112,6 +114,11 @@
         </div>
 
 
+    </div>
+    <div class="container">
+      <div id="sectorVis">
+      WHERE YOUR EMISSIONS ARE FROM
+    </div>
     </div>
     <script>
         //to fade things in
@@ -127,6 +134,8 @@
             var co2Data = [];
 
             var engData = [];
+
+            var sectorData;
 
             // see: https://github.com/mbostock/d3/wiki/Time-Formatting
             var dateFormatter = d3.time.format("%Y-%m-%d");
@@ -146,7 +155,10 @@
                 var count_usage_vis = new CountryUVis(d3.select("#countVis"), engData);
                 var count_comp_vis = new CountryPVis(d3.select("#countVis"), engData, co2Data);
                 var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);  
-                var circle_vis = new CircleVis(d3.select("#circleVis"), co2Data) 
+                var circle_vis = new CircleVis(d3.select("#circleVis"), co2Data);
+                //var sector_vis = new SectorVis(d3.select("#sectorVis"), sectorData);
+
+                console.log(sectorData);
 
                 // Bind the eventHandler to the Vis Objects
                 $(MyEventHandler).bind("selectionChanged", function(event, selection){
@@ -197,15 +209,15 @@
 
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _data, _gdpdata, _popdata, _longlat, _totaldata, _altdata, _combdata, _fordata, _metadata) {
+            var dataLoaded = function (error, _data, _gdpdata, _popdata, _longlat, _totaldata, _altdata, _combdata, _fordata, _metadata, _sectordata) {
                 if (!error) {
 
                 //Function to wrangle raw data 
                 function flatData (data){
 
                       var clean = []
-
-
+                      
+                      sectorData = _sectordata;
 
                       data.Root.data.record.forEach(function(d){
                         if("__text" in d.field[3]){
@@ -411,9 +423,10 @@
                       }
                     })
 
-                    //console.log(co2Data);
+
                     //Store consolodated energy data in global variable
-                    engData = cleanest_edata
+                    engData = cleanest_edata;
+
 
                   initVis();
                                 }
@@ -431,6 +444,7 @@
                 .defer(d3.json, 'data/combust_renew_raw_data.json')
                 .defer(d3.json, 'data/forest_area_raw_data.json')
                 .defer(d3.json, 'data/country_metadata.json')
+                .defer(d3.json, 'data/sector_data.json')
 
                 .await(dataLoaded);
 

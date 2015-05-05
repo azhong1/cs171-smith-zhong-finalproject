@@ -383,6 +383,7 @@ a:active {
 /*** CHAPTER ONE ****/
 .history_title {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding-top: 15px;
     margin-top: 70px;
     font-size: 25px;
     color:grey;
@@ -514,7 +515,7 @@ a:active {
 }
 
 #legend {
-    left:510px;
+    left:495px;
     margin-top: 10px;
     opacity:0.75;
 }
@@ -522,8 +523,16 @@ a:active {
 #legend2 {
     height:45px;
     margin-top: 10px;
-    left:920px;
+    left:910px;
     opacity:0.75;
+}
+
+.chart_label {
+    font-size: 12px;
+    position:absolute;
+    z-index:1;
+    margin-top: -150px;
+    text-align: center;
 }
 
 .instr{
@@ -555,7 +564,7 @@ a:active {
 
 .key {
     position:absolute;
-    left:-20px;
+    left:-15px;
     top:120px;
     height:150px;
     width:150px;

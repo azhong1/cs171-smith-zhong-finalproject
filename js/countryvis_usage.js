@@ -37,7 +37,7 @@ CountryUVis.prototype.initVis = function(){
       .attr("width", this.width + this.margin.right + this.margin.left - 15)
         .attr("height", this.height + this.margin.top +this.margin.bottom)
       .append("g")
-        .attr("transform", "translate(20," + 8 + ")")
+        .attr("transform", "translate(10," + 8 + ")")
 
 
     // filter, aggregate, modify data
@@ -45,7 +45,7 @@ CountryUVis.prototype.initVis = function(){
 
     // creates axis and scales
     this.x = d3.scale.linear()
-      .range([0, this.width - 35]);
+      .range([0, this.width - 25]);
 
     this.y = d3.scale.linear()
       .range([this.height, 0]);
@@ -55,12 +55,14 @@ CountryUVis.prototype.initVis = function(){
     this.xAxis = d3.svg.axis()
       .scale(this.x)
       .orient("bottom")
-      .tickFormat(d3.format("d"));
+      .tickFormat(d3.format("d"))
+      .tickSize(-this.height, 0, 0);
 
     this.yAxis = d3.svg.axis()
       .scale(this.y)
       .orient("left")
-      .ticks(7);
+      .ticks(7)
+      .tickSize(-this.width, 0, 0);
 
       yearscale = d3.scale.ordinal()
 
@@ -102,6 +104,19 @@ CountryUVis.prototype.initVis = function(){
       .attr("id", "instr1")
       .style("display", "block")
       .html("SELECT A COUNTRY ON THE MAP<br>TO VIEW ITS ENERGY PROFILE");
+
+    //add axis labels
+    this.svg.append("g")
+      .append("text")
+        .attr("class", "chart_label")
+        .attr("id", "chart_label1")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -30)
+        .attr("y", 5)
+        .attr("dy", ".71em")
+        .style("display", "none")
+        .style("text-anchor", "end")
+        .text("Energy Consumption (kt)");
       
 }
 
@@ -131,6 +146,7 @@ CountryUVis.prototype.updateVis = function(){
         d3.selectAll("#instr1").style("display", "").html("NO ENERGY DATA FOR SELECTION.<br> PLEASE CHOOSE AGAIN.");
         d3.selectAll("#legend").style("display", "none");
         d3.selectAll("#instr1").style("margin-left", "-5px");
+        d3.selectAll("#chart_label1").style("display", "none");
 
 
     }
@@ -143,6 +159,7 @@ CountryUVis.prototype.updateVis = function(){
     d3.selectAll(".history_text").style("display", "").text("Country selected: "+ this.metaData +"")
     d3.selectAll("#instr1").style("display", "none")
     d3.selectAll("#legend").style("display", "block");
+    d3.selectAll("#chart_label1").style("display", "block");
     //d3.selectAll("#instr1").style("margin-left", "0px");
 
     
