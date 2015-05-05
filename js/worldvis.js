@@ -50,6 +50,28 @@ WorldVis.prototype.initVis = function(){
         .attr("class", "key")
         .attr("id", "key_gdp")
         .style("display", "block")
+
+    //add text block on left
+    this.parentElement.append("div")
+        .attr("class", "history_text")
+        .text("here is where info will go")
+
+    //add buttons
+    this.parentElement.append("button")
+        .attr("class", "btn_on")
+        .attr("id", "gdpBtn")
+        .text("GDP")
+
+    this.parentElement.append("button")
+        .attr("class", "history_btn")
+        .attr("id", "popBtn")
+        .text("POPULATION")
+
+    this.parentElement.append("button")
+        .attr("class", "history_btn")
+        .attr("id", "forestBtn")
+        .text("FOREST %")
+
         
     //instantiate world map
     this.map = new Datamap({element: document.getElementById('map'),
@@ -431,7 +453,7 @@ WorldVis.prototype.updateVis = function(){
 
     d3.selectAll(".datamaps-bubble")
        .style("fill", "#990033")
-       .text(function(d){console.log(d)});
+       //.text(function(d){console.log(d)});
 
     
 

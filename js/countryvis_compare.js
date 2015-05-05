@@ -34,14 +34,14 @@ CountryPVis.prototype.initVis = function(){
       .attr("width", this.width + this.margin.right + this.margin.left - 15)
         .attr("height", this.height + this.margin.top +this.margin.bottom)
       .append("g")
-        .attr("transform", "translate(-10," + 18 + ")")
+        .attr("transform", "translate("+ -5 +"," + 18 + ")")
 
     // filter, aggregate, modify data
     this.wrangleData();
 
     // creates axis and scales
     this.x = d3.scale.linear()
-      .range([0, this.width-5])
+      .range([0, this.width-15])
 
     this.y_pop = d3.scale.linear()
       .range([this.height-10, 0]);
@@ -53,19 +53,19 @@ CountryPVis.prototype.initVis = function(){
       .scale(this.x)
       .orient("bottom")
       .tickFormat(d3.format("d"))
-      .tickSize(-this.height, 0, 0);
+      .tickSize(-this.height + 10, 0, 0);
 
     this.yAxisPop = d3.svg.axis()
       .scale(this.y_pop)
-      .ticks(8)
       .orient("right")
-      .tickSize(-this.width, 0, 0);;
+      .ticks(5)
+      .tickSize(-this.width + 15, 0, 0);;
 
     this.yAxisGdp = d3.svg.axis()
       .scale(this.y_gdp)
-      .ticks(8)
       .orient("left")
-      .tickSize(-this.width, 0, 0);  
+      .ticks(5)
+      .tickSize(-this.width + 15, 0, 0);  
 
       yearscale = d3.scale.ordinal()
 
@@ -100,7 +100,7 @@ CountryPVis.prototype.initVis = function(){
 
     this.svg.append("g")
         .attr("class", "y axis right")
-        .attr("transform", "translate(" + (this.margin.left+this.width) + ", "+10+")")
+        .attr("transform", "translate(" + (this.margin.left+this.width-15) + ", "+10+")")
         .style("stroke", "#64993C")
 
     this.parentElement.append("p")
@@ -116,13 +116,13 @@ CountryPVis.prototype.initVis = function(){
         .attr("class", "chart_label")
         .attr("id", "chart_label2")
         .attr("transform", "rotate(-90)")
-        .attr("x", -20)
+        .attr("x", -15)
         .attr("y", 25)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .style("display", "none")
         .style("fill", "#7D684C")
-        .text("Kt Carbon Emissions per $1M GDP)")
+        .text("Emissions per $1M GDP (kt)")
 
 
     this.svg.append("g")
@@ -130,13 +130,13 @@ CountryPVis.prototype.initVis = function(){
         .attr("class", "chart_label")
         .attr("id", "chart_label3")
         .attr("transform", "rotate(90)")
-        .attr("x", 20 )
-        .attr("y", -200)
+        .attr("x", 177 )
+        .attr("y", -400)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .style("display", "none")
         .style("fill", "#64993C")
-        .text("Emissions Per 1,000 People")
+        .text("Emissions Per 1000 People (kt)")
 
 }
 

@@ -233,7 +233,7 @@ a:active {
 
 .temp_title_4 {
     color:grey;
-    margin-bottom: 80px;
+    margin-bottom: 120px;
 }
 
 .temp_title_begin {
@@ -381,15 +381,67 @@ a:active {
 }
 
 /*** CHAPTER ONE ****/
-.history_title {
+li {
+    display:inline;
+    float: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 3px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    padding-top: 15px;
-    margin-top: 70px;
+}
+ul {
+    padding-left: 0px;
+    padding-top: 10px;
+    border-bottom: solid 1px lightgrey;
+    width:100%;
+    padding-bottom: 10px;
+    margin-bottom: 0px
+}
+
+.navbar_home {
+    position:fixed;
+    z-index: 1;
+    width:100%;
+    background-color: white;
+    margin-bottom:0px;
+}
+
+.navbar, .navbar_home {
+    text-align: center;
+    margin-bottom:0px;
+}
+
+.navbar {
+    margin-bottom: 10px;
+}
+
+#nav, #nav2, #nav3, #nav4 {
+    color: black;
+}
+
+.back {
+    width:100%;
+    height:910px;
+}
+
+.history_title_top, .history_title {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding-top: 20px;
     font-size: 25px;
     color:grey;
     letter-spacing: 3px;
     font-weight:200;
     text-align: center;
+}
+
+.history_title_top {
+    margin-top: 0px;
+}
+
+.history_title {
+    margin-top: 50px;
 }
 
 .container_world {
@@ -455,6 +507,7 @@ a:active {
 
 #countVis {
     margin-left: 285px;
+    margin-bottom: 100px;
 }
 
 #usage {
@@ -467,7 +520,7 @@ a:active {
 
 .history_text {
     position: absolute;
-    margin-top: 280px;
+    margin-top: -239px;
     margin-left: 0px;
     width:270px;
     height:459px;
@@ -509,14 +562,14 @@ a:active {
 
 .legend {
     display:none;
-    height:50px;
+    width:120px;
     position:absolute;
 
 }
 
 #legend {
     left:495px;
-    margin-top: 10px;
+    margin-top: 12px;
     opacity:0.75;
 }
 
@@ -589,7 +642,34 @@ a:active {
     background-position: center;
 }
 
-/***axes formatting ****/
+/*************** sankey formatting *****************/
+
+#sankey {
+    border-top: solid 1px lightgrey;
+    /*background-color: #F8F8F8;*/
+    height:820px;
+}
+
+#sectorVis {
+    display:block;
+    margin:auto auto;
+    width:100%;
+}
+
+#sankey_basic {
+    margin-top: 80px;
+    width:100%;
+    margin-bottom: 100px;
+}
+
+.sector_text {
+    text-align: center;
+    font-size: 15px;
+    margin-top: 20px;
+}
+
+
+/*************** axes formatting *******************/
 .axis text {
     font: 11px Helvetica, Arial, sans-serif;
 }
