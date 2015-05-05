@@ -153,7 +153,7 @@
                 
                 var temperature_vis = new TempVis(d3.select("#tempVis"), temperature_array);
                 var count_usage_vis = new CountryUVis(d3.select("#countVis"), engData);
-                var count_comp_vis = new CountryPVis(d3.select("#countVis"), engData, co2Data);
+                var count_comp_vis = new CountryPVis(d3.select("#countVis"), co2Data);
                 var world_vis = new WorldVis(d3.select("#worldVis"), co2Data, MyEventHandler);  
                 var circle_vis = new CircleVis(d3.select("#circleVis"), co2Data);
                 //var sector_vis = new SectorVis(d3.select("#sectorVis"), sectorData);

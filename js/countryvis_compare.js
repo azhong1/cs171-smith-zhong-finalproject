@@ -3,17 +3,15 @@
 **/
 
 
-CountryPVis = function(_parentElement, _engdata, _co2data){
+CountryPVis = function(_parentElement, _co2data){
 	this.parentElement = _parentElement;
-    this.data = _engdata
-    this.engdata = _engdata
+    this.data = _co2data
     this.co2data = _co2data
-    this.worldeng = this.initData(_engdata)
     this.worldco2 = this.initData(_co2data)
     this.displayData = null
 
     // define all "constants" 
-    this.margin = {top: 20, right: 0, bottom: 30, left: 70},
+    this.margin = {top: 20, right: 50, bottom: 30, left: 70},
     this.width = 420 - this.margin.right - this.margin.left
     this.height = 220 -this.margin.bottom - this.margin.top
 
@@ -46,10 +44,11 @@ CountryPVis.prototype.initVis = function(){
     this.x = d3.scale.linear()
       .range([0, this.width-5])
 
-    this.y = d3.scale.linear()
+    this.y_pop = d3.scale.linear()
       .range([this.height-10, 0]);
 
-    this.color = d3.scale.category20();
+    this.y_gdp = d3.scale.linear()
+      .range([this.height-10, 0]);
 
     this.xAxis = d3.svg.axis()
       .scale(this.x)
@@ -57,22 +56,35 @@ CountryPVis.prototype.initVis = function(){
       .tickFormat(d3.format("d"))
       .tickSize(-this.height, 0, 0);
 
-    this.yAxis = d3.svg.axis()
-      .scale(this.y)
+    this.yAxisPop = d3.svg.axis()
+      .scale(this.y_pop)
+      .ticks(8)
+      .orient("right")
+      .tickSize(-this.width, 0, 0);;
+
+    this.yAxisGdp = d3.svg.axis()
+      .scale(this.y_gdp)
       .ticks(8)
       .orient("left")
-      .tickSize(-this.width, 0, 0);;
+      .tickSize(-this.width, 0, 0);  
 
       yearscale = d3.scale.ordinal()
 
         yearscale.range(d3.range(1960, 2014))
         yearscale.domain(d3.range(0, 53))
 
-    //creates line generator
-    this.line = d3.svg.line()
+    //creates per capita emissions line generator
+    this.line_pop = d3.svg.line()
     .interpolate("basis")
     .x(function(d,i) {return that.x(yearscale(i)); })
-    .y(function(d) { return that.y(d); })
+    .y(function(d) { return that.y_pop(d); })
+        .defined(function(d) { return d; });
+
+    //creates emissions per gdp line generator
+    this.line_gdp = d3.svg.line()
+    .interpolate("basis")
+    .x(function(d,i) {return that.x(yearscale(i)); })
+    .y(function(d) { return that.y_gdp(d); })
         .defined(function(d) { return d; });
 
   
@@ -83,8 +95,14 @@ CountryPVis.prototype.initVis = function(){
         .attr("transform", "translate("+this.margin.left+"," + (this.height)+")")
 
     this.svg.append("g")
-        .attr("class", "y axis")
+        .attr("class", "y axis left")
         .attr("transform", "translate(" +this.margin.left+ ", "+10+")")
+        .style("fill", "#7D684C")
+
+    this.svg.append("g")
+        .attr("class", "y axis right")
+        .attr("transform", "translate(" + (this.margin.left+this.width) + ", "+10+")")
+        .style("stroke", "#64993C")
 
     this.parentElement.append("p")
       .attr("class", "instr")
@@ -104,7 +122,22 @@ CountryPVis.prototype.initVis = function(){
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .style("display", "none")
-        .text("Energy Consumption (kt)");
+        .style("fill", "#7D684C")
+        .text("Kt Carbon Emissions per $1M GDP)")
+
+
+    this.svg.append("g")
+      .append("text")
+        .attr("class", "chart_label")
+        .attr("id", "chart_label3")
+        .attr("transform", "rotate(90)")
+        .attr("x", 20 )
+        .attr("y", -200)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .style("display", "none")
+        .style("fill", "#64993C")
+        .text("Emissions Per 1,000 People")
 
 }
 
@@ -131,12 +164,14 @@ CountryPVis.prototype.updateVis = function(){
         console.log("null");
 
         this.svg.selectAll(".x.axis").style("display", "none")
-        this.svg.selectAll(".y.axis").style("display", "none")
+        this.svg.selectAll(".y.axis.left").style("display", "none")
+        this.svg.selectAll(".y.axis.right").style("display", "none")
         this.svg.selectAll(".lineContainer").style("display", "none")
         d3.selectAll("#instr2").style("margin-left", "65px");
         d3.selectAll("#instr2").style("display", "").html("NO DATA FOR SELECTION.<br> PLEASE CHOOSE AGAIN.");
         d3.selectAll("#legend2").style("display", "none");
         d3.selectAll("#chart_label2").style("display", "none");
+        d3.selectAll("#chart_label3").style("display", "none");
 
     }
 
@@ -145,36 +180,38 @@ CountryPVis.prototype.updateVis = function(){
     this.svg.selectAll(".area").style("display", "")
     this.svg.selectAll(".x.axis").style("display", "")
     d3.selectAll(".history_text").style("display", "").text("Country selected: "+ this.metaData +"")
-    this.svg.selectAll(".y.axis").style("display", "")
+    this.svg.selectAll(".y.axis.left").style("display", "")
+    this.svg.selectAll(".y.axis.right").style("display", "")
     d3.selectAll("#legend2").style("display", "block");
     d3.selectAll("#chart_label2").style("display", "block");
+    d3.selectAll("#chart_label3").style("display", "block");
+
 
   
-    var ymax = 0
+    var ymax_gdp = Math.max.apply(null, this.displayData[0]["values"])
+    var ymax_pop = Math.max.apply(null, this.displayData[1]["values"])
 
-    this.displayData.forEach(function (d) {
-      var max = Math.max.apply(null, d.values)
-      if (max > ymax) {ymax = max};
-    })
-   
     this.x.domain([1960, 2013]);
-    this.y.domain([0, ymax]);
+    this.y_gdp.domain([0, ymax_gdp])
+    this.y_pop.domain([0, ymax_pop]);
 
     // updates axis
     this.svg.select(".x.axis")
         .call(this.xAxis);
 
-    this.svg.select(".y.axis")
-        .call(this.yAxis)
+    this.svg.select(".y.axis.left")
+        .call(this.yAxisGdp)
 
-    var color = ["#7D684C", "#64993C", "#A6C259"]
+    this.svg.select(".y.axis.right")
+        .call(this.yAxisPop)
+
+    var color = ["#7D684C", "#64993C"]
 
     this.svg.selectAll(".lineContainer").remove()
 
     var container = this.svg.append("g")
       .attr("class", "lineContainer")
       .attr("transform", "translate("+this.margin.left+","+ 10+")")
-
 
     // updates graph
     var path = container.selectAll(".line")
@@ -183,13 +220,34 @@ CountryPVis.prototype.updateVis = function(){
 
     path.enter()
       .append("path")
-      .attr("d", function(d){return that.line(d.values)})
+      .attr("d", function(d,i){if (i == 0) {return that.line_gdp(d.values)} else {return that.line_pop(d.values)} })
       .attr("fill", "none")
       .style("stroke-width", 1.5)
-      .style("stroke", function(d,i){return color[i];});
+      .style("stroke", function(d,i){return color[i]});
 
     path.exit()
       .remove();
+
+    // var container2 = this.svg.append("g")
+    //   .attr("class", "lineContainer")
+    //   .attr("transform", "translate("+this.margin.left+","+ 10+")")
+
+
+    // // updates graph
+    // var path2 = container2.selectAll(".line")
+    //   .data(this.displayData[1])
+    //   .attr("class", "line")
+
+    // path2.enter()
+    //   .append("path")
+    //   .attr("d", function(d){return that.line_pop(d.values)})
+    //   .attr("fill", "none")
+    //   .style("stroke-width", 1.5)
+    //   .style("stroke", "#64993C");
+
+    // path2.exit()
+    //   .remove();
+
 
   }
 
@@ -237,15 +295,32 @@ CountryPVis.prototype.filterAndAggregate = function(_filter){
 
         that.metaData = d.name
 
-        gdp = d.gdp.map(function(d,i){if (d> 0) {return d/that.worldco2.gdp[i] * 100} else {return null;}})
-        pop = d.pop.map(function(d,i){if (d> 0 && that.worldco2.pop[i] > 0) { return d/that.worldco2.pop[i] * 100 } else {return null;}})
         co2 = d.years.map(function(d,i){if (d> 0) {return d/that.worldco2.years[i] * 100} else {return null;}})
 
-        that.displayData = [{"values": gdp }, {"values": pop}, {"values": co2}]
+        gdp = d.gdp.map(function(d,i){if (d> 0) {return d/that.worldco2.gdp[i] * 100} else {return null;}})
+        pop = d.pop.map(function(d,i){if (d> 0 && that.worldco2.pop[i] > 0) { return d/that.worldco2.pop[i] * 100 } else {return null;}})
+
+       var emissions_gdp = fixup(d.gdp,d.years).map(function(d){return 1000000*d});
+       var emissions_pop = fixup(d.pop, d.years).map(function(d){return 1000*d});
+
+        that.displayData = [{"values": emissions_gdp }, {"values": emissions_pop}]
 
 
         }
     })
+
+     function fixup (array1, co2array){
+        var newarray = []
+        array1.forEach(function(d,i){
+            if (d>0 && co2array[i] >0){
+                newarray.push(co2array[i]/d)
+            }
+            else {
+                newarray.push(null)
+            }
+        })
+        return newarray
+    }
 
 }
 
