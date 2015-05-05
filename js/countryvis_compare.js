@@ -59,13 +59,13 @@ CountryPVis.prototype.initVis = function(){
       .scale(this.y_pop)
       .orient("right")
       .ticks(5)
-      .tickSize(-this.width + 15, 0, 0);;
+      //.tickSize(-this.width + 15, 0, 0);;
 
     this.yAxisGdp = d3.svg.axis()
       .scale(this.y_gdp)
       .orient("left")
       .ticks(5)
-      .tickSize(-this.width + 15, 0, 0);  
+      //.tickSize(-this.width + 15, 0, 0);  
 
       yearscale = d3.scale.ordinal()
 

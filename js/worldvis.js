@@ -90,7 +90,8 @@ WorldVis.prototype.initVis = function(){
     this.map = new Datamap({element: document.getElementById('map'),
         scope: 'world',
         geographyConfig: {
-        //    popupOnHover: false,
+            popupOnHover: true,
+            //popupTemplate: "hello",
         //    highlightOnHover: false
             highlightBorderWidth: 0
         },
@@ -107,12 +108,32 @@ WorldVis.prototype.initVis = function(){
             //trigger selection event
             $(that.eventHandler).trigger("selectionChanged", geography.id);
 
-            });
+            })/*.on("mouseover", function(d){
+
+            var circle = this
+
+            that.mouseon = circle
+
+
+            that.updateTooltip(circle)
+            
+
+            })
+
+           .on("mouseout", function(d){
+
+            that.mouseon = null
+
+            d3.select(".tooltip_bubbles")
+                .style("visibility", "hidden");
+              })*/;
         }
     }); 
 
+    d3.selectAll(".datamaps-hoverover").style("display", "block");
+
     //instantiate world totals line plot
-    this.addLinePlot(this.svg)
+    this.addLinePlot()
 
     //add slider
     this.addSlider(this.svg)
@@ -471,7 +492,9 @@ WorldVis.prototype.updateVis = function(){
        .attr("id", function(d){ return ""+d.code+"_bub";})
        .style("fill", "#990033")
        .on("mouseover", function(d){
-
+        //console.log(d3.select(this)[0][0].style["cssText"]);
+        d3.select(this)[0][0].style["cssText"] = "stroke: rgb(255, 255, 255); stroke-width: 0px; fill-opacity: 0.8; fill: rgb(153, 0, 51)";
+        //d3.select(this).style("fill", "#black")
         var circle = this
 
         that.mouseon = circle
@@ -483,12 +506,13 @@ WorldVis.prototype.updateVis = function(){
         })
 
        .on("mouseout", function(d){
-
+        d3.select(this)[0][0].style["cssText"] = "stroke: rgb(255, 255, 255); stroke-width: 0px; fill-opacity: 0.5; fill: rgb(153, 0, 51)";
         that.mouseon = null
 
         d3.select(".tooltip_bubbles")
             .style("visibility", "hidden");
           });
+
     
 
 }
@@ -497,9 +521,11 @@ WorldVis.prototype.updateVis = function(){
 /**
  * Gets called by event handler and should create new aggregated data
  */
-WorldVis.prototype.onSelectionChange= function (selectionStart, selectionEnd){
+WorldVis.prototype.onSelectionChange= function (country){
 
-
+    console.log(country);
+    this.addLinePlot(country);
+   
 }
 
 /*
@@ -650,10 +676,10 @@ WorldVis.prototype.addSlider = function(svg){
 /**
  * creates the world c02 totals line plot
  */
-WorldVis.prototype.addLinePlot = function(svg){
+WorldVis.prototype.addLinePlot = function(country){
     var that = this;
-    
-    var lineGroup = svg.append("g").attr({
+    console.log(country);
+    var lineGroup = this.svg.append("g").attr({
         class:"lineGroup",
         "transform":"translate("+321+","+390+")"
     })
@@ -661,9 +687,9 @@ WorldVis.prototype.addLinePlot = function(svg){
     var linedata = []
 
     var years = [] 
-    that.data.forEach(function(d){ if(d.name == "World") {years = d.years}})
+    that.data.forEach(function(d){ if(d.country_id == country) {years = d.years}})
 
-    years.forEach(function(d,i){if (d>0){ linedata[i] = parseInt(d)}})
+    years.forEach(function(d,i){{ linedata[i] = parseInt(d)}})
 
     var x = d3.scale.linear()
     var y = d3.scale.linear()
@@ -672,7 +698,7 @@ WorldVis.prototype.addLinePlot = function(svg){
     var ymax = Math.max.apply(null, linedata)
     var ymin = d3.min(linedata, function(d){if (d > 0){ return d}})
 
-    y.domain([0, ymax])
+    y.domain([-1, ymax])
     y.range([0, 70])
 
     x.range([0,360])
@@ -683,20 +709,21 @@ WorldVis.prototype.addLinePlot = function(svg){
 
     var line = d3.svg.line()
     .x(function(d, i) {return x(i); })
-    .y(function(d) { return y(d); });
+    .y(function(d) { console.log(d); return y(d); });
 
-    lineGroup.append("path")
+    /*lineGroup.append("path")
         .datum(linedata)
         .attr("class", "line")
         .attr("d", line)
         .attr("fill", "none")
         .attr("stroke", "black")
-        .attr("stroke-width", "0px");
+        .attr("stroke-width", "0px");*/
 
-
-    lineGroup.selectAll("rect")
+    
+    var rects = lineGroup.selectAll("rect.co2_bar")
         .data(linedata)
-      .enter().append("rect")
+
+    rects.enter().append("rect")
         .attr("class", "co2_bar")
         .style("fill", "#990033")
         .style("opacity", function(d, i) {return opac(i);})
@@ -707,6 +734,9 @@ WorldVis.prototype.addLinePlot = function(svg){
         .on("mouseover", function(d, i) {
       //    console.log(i)
       });
+
+    rects.exit().remove();
+    //this.svg.selectAll("rect.co2_bar").style("fill", "black");
 
 }
 
@@ -728,20 +758,27 @@ WorldVis.prototype.updateTooltip = function(circle){
 
     circ.each(function(d){emissions = d.emissions; name = d.name})
 
-
+    var left = parseFloat(circle.getAttribute("cx")) + 50;
+    var top;
+    if (parseFloat(circle.getAttribute("cy")) > 350) {top = parseFloat(circle.getAttribute("cy")) - 100}
+    else {top = parseFloat(circle.getAttribute("cy")) + 50;}
+    
+    //console.log(parseFloat(circle.getAttribute("cy")));
 
         d3.select(".tooltip_bubbles")
-            .style("left", circle.getAttribute("cx")+"px")
-            .style("top", circle.getAttribute("cy") +"px" )
+            .style("left", left+"px")
+            .style("top", top+"px" )
             .style("visibility", "visible")
             .text("")
             .append("p")
+            .attr("class", "tool_text")
             .style("font-weight", "bold")
             .text(name)
             .append("p")
+            .attr("class", "tool_text")
             .style("font-weight","normal")
             .text("Year: "+ that.year+"")
             .append("p")
-            .text("Emissions: "+ parseInt(emissions) +" kt CO2")
+            .text("Emissions (kt): "+ parseInt(emissions))
     }
 }

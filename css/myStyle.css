@@ -741,12 +741,16 @@ ul {
   border-radius: 2px;
 }
 
+.tool_text {
+    margin-bottom: 0px;
+}
+
 .tooltip_temps {
         visibility:hidden;
         position: absolute;
         width: 100px;
         padding: 10px;
-        background-color: rgba(245,245,245,.75);
+        background-color: rgba(245,245,245,.9);
         font-size: 14px;
 }
 
@@ -755,6 +759,6 @@ ul {
         position: absolute;
         width: 150px;
         padding: 10px;
-        background-color: rgba(245,245,245,.75);
+        background-color: rgba(245,245,245,.9);
         font-size: 10px;
 }

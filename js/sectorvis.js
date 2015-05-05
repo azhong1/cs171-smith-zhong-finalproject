@@ -6,15 +6,15 @@ d3.json("data/sector_data.json", function(error, json) {
   if (error) return console.warn(error);
   var data = json;
 
-  data.links_normalized.forEach(function(d) {
+  data.links.forEach(function(d) {
     //console.log(d, d.value);
-    /*if (d.source == "Coal") {d.value = (d.value/100)*20;}
+    if (d.source == "Coal") {d.value = (d.value/100)*20;}
     else if (d.source == "Nuclear") {d.value = (d.value/100)*8;}
     else if (d.source == "Petroleum") {d.value = (d.value/100)*36;}
     else if (d.source == "Natural Gas") {d.value = (d.value/100)*26;}
     else if (d.source == "Renewable Energy") {d.value = (d.value/100)*9;}
-    console.log(d.value);*/
-    new_data.push([d.source, d.target, parseInt(d.value)]);
+    //console.log(d.value);
+    new_data.push([d.source, d.target, parseFloat(d.value)]);
   })
 
   console.log(new_data);

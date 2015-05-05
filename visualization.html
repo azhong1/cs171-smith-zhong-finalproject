@@ -11,7 +11,6 @@
     <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
     <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
     <script src="dm/dist/datamaps.world.min.js"></script>
-    <script src="libs/d3/sankey.js"></script>
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
@@ -117,6 +116,7 @@
                 // Bind the eventHandler to the Vis Objects
                 $(MyEventHandler).bind("selectionChanged", function(event, selection){
 
+                    world_vis.onSelectionChange(selection);
                     count_usage_vis.onSelectionChange(selection);
                     count_comp_vis.onSelectionChange(selection);
 
