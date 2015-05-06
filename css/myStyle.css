@@ -420,7 +420,7 @@ ul {
     /*background-color: #F8F8F8;*/
 }
 
-#nav, #nav2, #nav3, #nav4 {
+#nav, #nav2, #nav3, #nav4 , #nav5{
     color: black;
 }
 
@@ -557,7 +557,7 @@ ul {
 .history_text {
     margin-top: -195px;
     height:180px;
-    padding-top: 10px;
+    padding-top: 12px;
 }
 
 .history_text_bottom {
@@ -729,15 +729,25 @@ ul {
 }
 
 #sankey_basic {
-    margin-top: 80px;
+    margin-top: 50px;
     width:100%;
-    margin-bottom: 100px;
+    margin-bottom: 60px;
 }
 
 .sector_text {
     text-align: center;
     font-size: 15px;
     margin-top: 20px;
+}
+
+.sector_explain {
+    font-size:13px;
+    text-align: center;
+}
+
+.sector_legend {
+    font-size: 12px;
+    text-align: center;
 }
 
 
