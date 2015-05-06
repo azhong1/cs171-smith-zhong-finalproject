@@ -125,6 +125,26 @@ WorldVis.prototype.initVis = function(){
     this.parentElement.append("text")
         .attr("class", "explore_label")
         .html("CLICK ON A DECADE ABOVE TO EXPLORE IN MORE DETAIL")
+
+    //add year axis
+    this.x = d3.scale.linear()
+      .range([0, 353])
+      .domain([1960, 2009])
+
+    this.xAxis = d3.svg.axis()
+      .scale(this.x)
+      .orient("bottom")
+      .tickFormat(d3.format("d"))
+      .tickSize(7, 0, 0);
+
+    this.svg.append("g")
+        .attr("class", "emissions_axis")
+        .attr("transform", "translate("+324+"," + 470 +")")
+        .call(this.xAxis);
+
+    
+
+    
         
     //instantiate world map
     this.map = new Datamap({element: document.getElementById('map'),
@@ -680,7 +700,7 @@ WorldVis.prototype.addSlider = function(svg){
 
     var sliderGroup = svg.append("g").attr({
         class:"sliderGroup",
-        "transform":"translate("+320+","+470+")"
+        "transform":"translate("+320+","+460+")"
     })
 
     sliderGroup.append("rect").attr({
@@ -1106,7 +1126,7 @@ WorldVis.prototype.addLinePlot = function(country){
 
     var lineGroup = this.svg.append("g").attr({
         class:"lineGroup",
-        "transform":"translate("+321+","+390+")"
+        "transform":"translate("+321+","+380+")"
     })
 
     var linedata = []
@@ -1124,7 +1144,7 @@ WorldVis.prototype.addLinePlot = function(country){
     var ymin = d3.min(linedata, function(d){if (d > 0){ return d}})
 
     y.domain([-1, ymax])
-    y.range([0, 70])
+    y.range([0, 60])
 
     x.range([0,360])
     x.domain([0, 51])
