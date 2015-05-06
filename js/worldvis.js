@@ -87,19 +87,19 @@ WorldVis.prototype.initVis = function(){
 
     this.country_text_top.append("text").style("display", "none")
     .attr("id", "sixties_text")
-        .html("<strong>1960's:</strong> 1960 marked the beginning of rapid changes in global carbon emissions. Before that, the world generally experienced a constant increase in emissions proportional to population growth.")
+        .html("<strong>1960s:</strong> 1960 marked the beginning of rapid changes in global carbon emissions. Before that, the world generally experienced a constant increase in emissions proportional to population growth.")
 
     this.country_text_top.append("text").style("display", "none")
     .attr("id", "seventies_text")
-        .html("<strong>70's & 80's: </strong>While the US continued to be the top CO2 emitter until the 2000’s, Asian countries, especially China, started to emerge. There is no data for Russia until the dissolution of the Soviet Union in 1991, although it was a top emitter.")
+        .html("<strong>70s & 80s: </strong>While the US continued to be the top CO2 emitter until the 2000’s, Asian countries, especially China, started to emerge. There is no data for Russia until the dissolution of the Soviet Union in 1991, although it was a top emitter.")
     
     this.country_text_top.append("text").style("display", "none")
     .attr("id", "nineties_text")
-        .html("<strong>1990's: </strong>In 1993, Asia became the largest emitter by continent of CO2, largely due to rapid Chinese economic reform that started in the 1980’s. In 1994, Asia’s GDP became the largest in the world and its emissions continued to reflect that.")
+        .html("<strong>1990s: </strong>In 1993, Asia became the largest emitter by continent of CO2, largely due to rapid Chinese economic reform that started in the 1980’s. In 1994, Asia’s GDP became the largest in the world and its emissions continued to reflect that.")
     
     this.country_text_top.append("text").style("display", "none")
     .attr("id", "noughties_text")
-        .html("<strong>2000's: </strong>In the past, Europe and North America accounted for a high % of emissions. However, China overtook the US as the top emitter in 2005 and by 2011, Asia contributed more than half of global CO₂ emissions.") 
+        .html("<strong>2000s: </strong>In the past, Europe and North America accounted for a high % of emissions. However, China overtook the US as the top emitter in 2005 and by 2011, Asia contributed more than half of global CO₂ emissions.") 
 
     //add buttons
     this.parentElement.append("button")
@@ -139,7 +139,7 @@ WorldVis.prototype.initVis = function(){
 
     this.svg.append("g")
         .attr("class", "emissions_axis")
-        .attr("transform", "translate("+324+"," + 470 +")")
+        .attr("transform", "translate("+324+"," + 467 +")")
         .call(this.xAxis);
 
     
@@ -707,7 +707,7 @@ WorldVis.prototype.addSlider = function(svg){
         class:"sliderBg",
         x:0,
         width:360,
-        height: 10
+        height: 7
     }).style({
         fill:"lightgray"
     })
@@ -802,7 +802,7 @@ WorldVis.prototype.addSlider = function(svg){
     this.parentElement.append("button")
         .attr("class", "history_btn")
         .attr("id", "sixtiesBtn")
-        .text("60's")
+        .text("60s")
 
     //add functionality for explore buttons
     this.sixtiesButton = document.getElementById("sixtiesBtn");
@@ -881,7 +881,7 @@ WorldVis.prototype.addSlider = function(svg){
     this.parentElement.append("button")
         .attr("class", "history_btn")
         .attr("id", "seventiesBtn")
-        .text("70's")
+        .text("70s")
 
     //add functionality for explore buttons
     this.seventiesButton = document.getElementById("seventiesBtn");
@@ -959,7 +959,7 @@ WorldVis.prototype.addSlider = function(svg){
     this.parentElement.append("button")
         .attr("class", "history_btn")
         .attr("id", "ninetiesBtn")
-        .text("90's")
+        .text("90s")
 
     //add functionality for explore buttons
     this.ninetiesButton = document.getElementById("ninetiesBtn");
@@ -1037,7 +1037,7 @@ WorldVis.prototype.addSlider = function(svg){
     this.parentElement.append("button")
         .attr("class", "history_btn")
         .attr("id", "noughtiesBtn")
-        .text("2000's")
+        .text("2000s")
 
     //add functionality for explore buttons
     this.noughtiesButton = document.getElementById("noughtiesBtn");
