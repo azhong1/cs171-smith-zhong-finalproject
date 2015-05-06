@@ -55,14 +55,51 @@ WorldVis.prototype.initVis = function(){
 
     //add text block on left
     this.country_text = this.parentElement.append("div")
-        .attr("class", "history_text")
+        .attr("class", "history_text_bottom")
     
     this.country_text.append("text")
         .attr("id", "country_text")
-        .text("here is where info will go. ")
+        .html("<strong>Country: </strong>World <br>")
     this.country_text.append("text")
         .attr("id", "year_text")
-        .text("Year.")
+        .text("Year: ")
+    this.country_text.append("text")
+        .attr("id", "emissions_text")
+        .text("CO2 Emissions (kt): ")
+    this.country_text.append("text")
+        .attr("id", "region_text")
+        .text("Region: ")
+    this.country_text.append("text")
+        .attr("id", "income_text")
+        .text("Income group: ")
+    this.country_text.append("text")
+        .attr("id", "population_text")
+        .text("Population: ")
+    this.country_text.append("text")
+        .attr("id", "gdp_text")
+        .text("GDP: ")
+    this.country_text.append("text")
+        .attr("id", "forest_text")
+        .text("Forest Area %: ")
+
+    this.country_text_top = this.parentElement.append("div")
+        .attr("class", "history_text")
+
+    this.country_text_top.append("text").style("display", "none")
+    .attr("id", "sixties_text")
+        .html("<strong>1960's:</strong> 1960 marked the beginning of rapid changes in global carbon emissions. Before that, the world generally experienced a constant increase in emissions proportional to population growth.")
+
+    this.country_text_top.append("text").style("display", "none")
+    .attr("id", "seventies_text")
+        .html("<strong>70's & 80's: </strong>While the US continued to be the top CO2 emitter until the 2000’s, Asian countries, especially China, started to emerge. There is no data for Russia until the dissolution of the Soviet Union in 1991, although it was a top emitter.")
+    
+    this.country_text_top.append("text").style("display", "none")
+    .attr("id", "nineties_text")
+        .html("<strong>1990's: </strong>In 1993, Asia became the largest emitter by continent of CO2, largely due to rapid Chinese economic reform that started in the 1980’s. In 1994, Asia’s GDP became the largest in the world and its emissions continued to reflect that.")
+    
+    this.country_text_top.append("text").style("display", "none")
+    .attr("id", "noughties_text")
+        .html("<strong>2000's: </strong>In the past, Europe and North America accounted for a high % of emissions. However, China overtook the US as the top emitter in 2005 and by 2011, Asia contributed more than half of global CO₂ emissions.") 
 
     //add buttons
     this.parentElement.append("button")
@@ -80,11 +117,14 @@ WorldVis.prototype.initVis = function(){
         .attr("id", "forestBtn")
         .text("FOREST %")
 
-    this.parentElement.append("button")
-        .attr("class", "history_btn")
-        //.attr("id", "forestBtn")
-        .text("70's")
+    //add total emissions label
+    this.parentElement.append("text")
+        .attr("class", "emissions_label")
+        .html("Total Emissions for <strong>World</strong>")
 
+    this.parentElement.append("text")
+        .attr("class", "explore_label")
+        .html("CLICK ON A DECADE ABOVE TO EXPLORE IN MORE DETAIL")
         
     //instantiate world map
     this.map = new Datamap({element: document.getElementById('map'),
@@ -139,6 +179,8 @@ WorldVis.prototype.initVis = function(){
     //add slider
     this.addSlider(this.svg)
 
+    this.current_country = "WLD";
+
     // filter, aggregate, modify data, calls updateVis
     this.wrangleData_gdp();
 
@@ -161,6 +203,14 @@ WorldVis.prototype.wrangleData_gdp= function(){
     d3.select("#key_gdp").style("display", "block");
     d3.select("#key_forest").style("display", "none");
     d3.select("#key_pop").style("display", "none");
+
+    //update buttons
+    d3.select("#gdpBtn")
+                          .attr("class", "btn_on");
+                        d3.select("#popBtn")
+                          .attr("class", "history_btn");
+                        d3.select("#forestBtn")
+                          .attr("class", "history_btn");   
 
     var that = this
 
@@ -253,6 +303,14 @@ WorldVis.prototype.wrangleData_pop= function(){
     d3.select("#key_pop").style("display", "block");
     d3.select("#key_forest").style("display", "none");
     d3.select("#key_gdp").style("display", "none");
+
+    //update buttons
+    d3.select("#gdpBtn")
+                          .attr("class", "history_btn");
+                        d3.select("#popBtn")
+                          .attr("class", "btn_on");  
+                        d3.select("#forestBtn")
+                          .attr("class", "history_btn"); 
 
     this.displayData = [];
 
@@ -382,6 +440,14 @@ WorldVis.prototype.wrangleData_forest= function(){
     d3.select("#key_pop").style("display", "none");
     d3.select("#key_gdp").style("display", "none");
 
+    //update buttons
+    d3.select("#gdpBtn")
+                          .attr("class", "history_btn");
+                        d3.select("#popBtn")
+                          .attr("class", "history_btn");
+                        d3.select("#forestBtn")
+                          .attr("class", "btn_on"); 
+
     this.displayData = [];
 
     var current_year = this.year - 1960 //to get the indexing correct
@@ -471,10 +537,6 @@ WorldVis.prototype.wrangleData_forest= function(){
 WorldVis.prototype.updateVis = function(){
     var that = this
 
-    console.log(this.year);
-
-    d3.select("#year_text").text("Year: "+ this.year);
-
     // update circles
     this.map.bubbles(this.displayData); //, {highlightOnHover: false});
     //geographyConfig: {
@@ -514,6 +576,47 @@ WorldVis.prototype.updateVis = function(){
             .style("visibility", "hidden");
           });
 
+
+    //update text on the left
+    var emissions;
+    var population;
+    var gdp;
+    var forest;
+    var region;
+    var income;
+    var country_name;
+
+    that.data.forEach(function(d){ if(d.country_id == that.current_country) {
+        if (d.years[that.year - 1960] > 0) {
+            emissions = parseInt(d.years[that.year - 1960]);
+        } else {emissions = "No data"}
+
+        if (d.pop[that.year - 1960] > 0) {
+            population = d.pop[that.year - 1960];
+        } else {population = "No data"}
+        
+        if (d.gdp[that.year - 1960] > 0) {
+            gdp = parseInt(d.gdp[that.year - 1960]);
+        } else {gdp = "No data"}
+
+        if (d.forest[that.year - 1960] > 0) {
+            forest = parseInt(d.forest[that.year - 1960]);
+        } else {forest = "No data"}
+
+        income = d.income_group;
+        region = d.region;
+        country_name = d.name;
+
+    }})
+
+    d3.select("#year_text").html("<strong>Year: </strong>"+ this.year + "<br>");
+    d3.select("#emissions_text").html("<strong>CO2 Emissions (kt): </strong>" + emissions + "<br>")
+    d3.select("#region_text").html("<strong>Region: </strong>" + region + "<br>")
+    d3.select("#income_text").html("<strong>Income group: </strong>" + income + "<br>")
+    d3.select("#population_text").html("<strong>Population: </strong>" + population +"<br>")
+    d3.select("#gdp_text").html("<strong>GDP ($USD): </strong>" + gdp + "<br>")
+    d3.select("#forest_text").html("<strong>Forest Area %: </strong>" + forest + "<br>")
+    d3.select(".emissions_label").html("Total Emissions for <strong>"+ country_name +"</strong>")
     
 
 }
@@ -524,8 +627,10 @@ WorldVis.prototype.updateVis = function(){
  */
 WorldVis.prototype.onSelectionChange= function (country){
 
+    this.current_country = country;
     console.log(country);
     this.addLinePlot(country);
+    this.updateVis();
    
 }
 
@@ -604,9 +709,11 @@ WorldVis.prototype.addSlider = function(svg){
         "transform": "translate(300,-100)",
     }).text("Play").style("position", "absolute")
 
+
     this.animationOn = false;
 
     // Turn on and off slider animation
+
     this.playButton = document.getElementById("playBtn");
     this.playButton.addEventListener("click", function() { 
 
@@ -671,6 +778,320 @@ WorldVis.prototype.addSlider = function(svg){
             that.animationOn = false
         }                
     });
+
+    this.parentElement.append("button")
+        .attr("class", "history_btn")
+        .attr("id", "sixtiesBtn")
+        .text("60's")
+
+    //add functionality for explore buttons
+    this.sixtiesButton = document.getElementById("sixtiesBtn");
+    this.sixtiesButton.addEventListener("click", function() { 
+
+        if (that.animationOn == false){
+            
+            that.parentElement.select("#sixties_text").style("display", "block");
+            that.parentElement.select("#seventies_text").style("display", "none");
+            that.parentElement.select("#nineties_text").style("display", "none");
+            that.parentElement.select("#noughties_text").style("display", "none");
+
+            //update button text
+            that.parentElement.select("#sixtiesBtn")
+                .attr("class", "btn_on")
+
+            that.parentElement.select(".explore_label").style("display", "none")
+
+            that.animationOn = true
+
+            var start = 0
+            svg.select(".sliderHandle").attr({x: 0});
+
+            function animationLoop(){
+                setTimeout(function () { 
+                    
+                    var slider = svg.select(".sliderHandle")
+                    var pos = parseInt(slider.attr("x")) + 1;
+
+                    //update slider position
+                    slider.attr({x: pos})
+
+                    //update visualization
+                    that.year = sliderScale(pos)
+
+                    if (that.toggle == 0) {
+                        that.wrangleData_gdp();
+                        that.updateTooltip(that.mouseon)
+                    } else if (that.toggle == 1) {
+                        that.wrangleData_pop()
+                        that.updateTooltip(that.mouseon)
+
+                    } else {
+                        that.wrangleData_forest()
+                        that.updateTooltip(that.mouseon)
+                    }
+
+                    start = pos;
+                    if(start < 69 && that.animationOn){
+                        animationLoop()
+                    }
+                    else if (start > 68 && that.animationOn){
+                        that.animationOff
+                        that.parentElement.select("#sixtiesBtn")
+                            .attr("class", "history_btn");
+
+
+                    }
+                }, 1) 
+            } 
+
+            animationLoop()       
+
+        }
+        else{
+
+            //update button text    
+            that.parentElement.select("#sixtiesBtn")
+                    .attr("class", "history_btn")
+
+            //reset animation boolean to exit animation loop
+            that.animationOn = false
+        }                
+    });
+
+    this.parentElement.append("button")
+        .attr("class", "history_btn")
+        .attr("id", "seventiesBtn")
+        .text("70's")
+
+    //add functionality for explore buttons
+    this.seventiesButton = document.getElementById("seventiesBtn");
+    this.seventiesButton.addEventListener("click", function() { 
+
+        if (that.animationOn == false){
+
+            that.parentElement.select(".explore_label").style("display", "none")
+            that.parentElement.select("#sixties_text").style("display", "none");
+            that.parentElement.select("#seventies_text").style("display", "block");
+            that.parentElement.select("#nineties_text").style("display", "none");
+            that.parentElement.select("#noughties_text").style("display", "none");
+        
+            //update button text
+            that.parentElement.select("#seventiesBtn")
+                .attr("class", "btn_on")
+
+            that.animationOn = true
+
+            var start = 0
+            svg.select(".sliderHandle").attr({x: 69});
+
+            function animationLoop(){
+                setTimeout(function () { 
+                    
+                    var slider = svg.select(".sliderHandle")
+                    var pos = parseInt(slider.attr("x")) + 1;
+
+                    //update slider position
+                    slider.attr({x: pos})
+
+                    //update visualization
+                    that.year = sliderScale(pos)
+
+                    if (that.toggle == 0) {
+                        that.wrangleData_gdp();
+                        that.updateTooltip(that.mouseon)
+                    } else if (that.toggle == 1) {
+                        that.wrangleData_pop()
+                        that.updateTooltip(that.mouseon)
+
+                    } else {
+                        that.wrangleData_forest()
+                        that.updateTooltip(that.mouseon)
+                    }
+
+                    start = pos;
+                    if(start < 217 && start > 69 && that.animationOn){
+                        animationLoop()
+                    }
+                    else if (start > 216 && that.animationOn){
+                        that.animationOff
+                        that.parentElement.select("#seventiesBtn")
+                            .attr("class", "history_btn");
+
+
+                    }
+                }, 1) 
+            } 
+
+            animationLoop()       
+
+        }
+        else{
+
+            //update button text    
+            that.parentElement.select("#seventiesBtn")
+                    .attr("class", "history_btn")
+
+            //reset animation boolean to exit animation loop
+            that.animationOn = false
+        }                
+    });
+    
+    this.parentElement.append("button")
+        .attr("class", "history_btn")
+        .attr("id", "ninetiesBtn")
+        .text("90's")
+
+    //add functionality for explore buttons
+    this.ninetiesButton = document.getElementById("ninetiesBtn");
+    this.ninetiesButton.addEventListener("click", function() { 
+
+        if (that.animationOn == false){
+            
+            that.parentElement.select(".explore_label").style("display", "none")
+            that.parentElement.select("#sixties_text").style("display", "none");
+            that.parentElement.select("#seventies_text").style("display", "none");
+            that.parentElement.select("#nineties_text").style("display", "block");
+            that.parentElement.select("#noughties_text").style("display", "none");
+
+            //update button text
+            that.parentElement.select("#ninetiesBtn")
+                .attr("class", "btn_on")
+
+            that.animationOn = true
+
+            var start = 0
+            svg.select(".sliderHandle").attr({x: 216});
+
+            function animationLoop(){
+                setTimeout(function () { 
+                    
+                    var slider = svg.select(".sliderHandle")
+                    var pos = parseInt(slider.attr("x")) + 1;
+
+                    //update slider position
+                    slider.attr({x: pos})
+
+                    //update visualization
+                    that.year = sliderScale(pos)
+
+                    if (that.toggle == 0) {
+                        that.wrangleData_gdp();
+                        that.updateTooltip(that.mouseon)
+                    } else if (that.toggle == 1) {
+                        that.wrangleData_pop()
+                        that.updateTooltip(that.mouseon)
+
+                    } else {
+                        that.wrangleData_forest()
+                        that.updateTooltip(that.mouseon)
+                    }
+
+                    start = pos;
+                    if(start < 285 && start > 216 && that.animationOn){
+                        animationLoop()
+                    }
+                    else if (start > 284 && that.animationOn){
+                        that.animationOff
+                        that.parentElement.select("#ninetiesBtn")
+                            .attr("class", "history_btn");
+
+
+                    }
+                }, 1) 
+            } 
+
+            animationLoop()       
+
+        }
+        else{
+
+            //update button text    
+            that.parentElement.select("#ninetiesBtn")
+                    .attr("class", "history_btn")
+
+            //reset animation boolean to exit animation loop
+            that.animationOn = false
+        }                
+    });
+
+    this.parentElement.append("button")
+        .attr("class", "history_btn")
+        .attr("id", "noughtiesBtn")
+        .text("2000's")
+
+    //add functionality for explore buttons
+    this.noughtiesButton = document.getElementById("noughtiesBtn");
+    this.noughtiesButton.addEventListener("click", function() { 
+
+        if (that.animationOn == false){
+            
+            that.parentElement.select(".explore_label").style("display", "none")
+            that.parentElement.select("#sixties_text").style("display", "none");
+            that.parentElement.select("#seventies_text").style("display", "none");
+            that.parentElement.select("#nineties_text").style("display", "none");
+            that.parentElement.select("#noughties_text").style("display", "block");
+
+            //update button text
+            that.parentElement.select("#noughtiesBtn")
+                .attr("class", "btn_on")
+
+            that.animationOn = true
+
+            var start = 0
+            svg.select(".sliderHandle").attr({x: 284});
+
+            function animationLoop(){
+                setTimeout(function () { 
+                    
+                    var slider = svg.select(".sliderHandle")
+                    var pos = parseInt(slider.attr("x")) + 1;
+
+                    //update slider position
+                    slider.attr({x: pos})
+
+                    //update visualization
+                    that.year = sliderScale(pos)
+
+                    if (that.toggle == 0) {
+                        that.wrangleData_gdp();
+                        that.updateTooltip(that.mouseon)
+                    } else if (that.toggle == 1) {
+                        that.wrangleData_pop()
+                        that.updateTooltip(that.mouseon)
+
+                    } else {
+                        that.wrangleData_forest()
+                        that.updateTooltip(that.mouseon)
+                    }
+
+                    start = pos;
+                    if(start < 354 && start > 284 && that.animationOn){
+                        animationLoop()
+                    }
+                    else if (start > 353 && that.animationOn){
+                        that.animationOff
+                        that.parentElement.select("#noughtiesBtn")
+                            .attr("class", "history_btn");
+
+
+                    }
+                }, 1) 
+            } 
+
+            animationLoop()       
+
+        }
+        else{
+
+            //update button text    
+            that.parentElement.select("#noughtiesBtn")
+                    .attr("class", "history_btn")
+
+            //reset animation boolean to exit animation loop
+            that.animationOn = false
+        }                
+    });
+
 
 }
 

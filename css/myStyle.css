@@ -457,17 +457,17 @@ ul {
 
 #gdpBtn {
     left:795px;
-    top:470px;
+    top:469px;
 }
 
 #popBtn {
     left:914px;
-    top:470px;
+    top:469px;
 }
 
 #forestBtn {
     left:1033px;
-    top:470px;
+    top:469px;
     z-index:1;
 }
 
@@ -520,13 +520,33 @@ ul {
 
 }
 
-.history_text {
+.emissions_label {
     position: absolute;
-    margin-top: -239px;
+    left:505px;
+    top:400px;
+    font-size:12px;
+}
+
+.history_text, .history_text_bottom {
+    position: absolute;
     margin-left: 0px;
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-right: 13px;
     width:270px;
-    height:459px;
+    
     background-color: #F5F5F5;
+    font-size: 13px;
+}
+
+.history_text {
+    margin-top: -195px;
+    height:180px;
+}
+
+.history_text_bottom {
+    margin-top: 0px;
+    height: 220px;
 }
 
 .history_btn, .btn_on {
@@ -557,6 +577,37 @@ ul {
    -moz-transition: all .15s ease;
    -o-transition: all .15s ease;
    -webkit-transition: all .15s ease;
+}
+
+.explore_label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    position: absolute;
+    text-align: center;
+    left:50px;
+    top:370px;
+    width:200px;
+}
+
+#sixtiesBtn, #seventiesBtn, #ninetiesBtn, #noughtiesBtn {
+    width:67.5px;
+    top:275px;
+}
+
+#sixtiesBtn{ 
+    left:15px;
+}
+
+#seventiesBtn {
+    left:82px;
+}
+
+#ninetiesBtn {
+    left:149px;
+}
+
+#noughtiesBtn {
+    left:216px;
 }
 
 .btn_on {
