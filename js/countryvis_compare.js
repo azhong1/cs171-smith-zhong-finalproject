@@ -178,7 +178,6 @@ CountryPVis.prototype.updateVis = function(){
     d3.selectAll("#instr2").style("display", "none")
     this.svg.selectAll(".area").style("display", "")
     this.svg.selectAll(".x.axis").style("display", "")
-    d3.selectAll("#country_text").style("display", "").text("Country selected: "+ this.metaData +". ")
     this.svg.selectAll(".y.axis.left").style("display", "")
     this.svg.selectAll(".y.axis.right").style("display", "")
     d3.selectAll("#legend2").style("display", "block");

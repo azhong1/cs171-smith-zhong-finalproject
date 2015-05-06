@@ -385,36 +385,7 @@
 
                 .await(dataLoaded);
 
-                // change button visuals on click
-                    d3.select("#gdpBtn").on("click", function() {
-                        d3.select("#gdpBtn")
-                          .attr("class", "btn_on");
-                        d3.select("#popBtn")
-                          .attr("class", "history_btn");
-                        d3.select("#forestBtn")
-                          .attr("class", "history_btn");   
-                    
-                    });
-
-                    d3.select("#popBtn").on("click", function() {
-                        d3.select("#gdpBtn")
-                          .attr("class", "history_btn");
-                        d3.select("#popBtn")
-                          .attr("class", "btn_on");  
-                        d3.select("#forestBtn")
-                          .attr("class", "history_btn"); 
-                    
-                    });
-
-                    d3.select("#forestBtn").on("click", function() {
-                        d3.select("#gdpBtn")
-                          .attr("class", "history_btn");
-                        d3.select("#popBtn")
-                          .attr("class", "history_btn");
-                        d3.select("#forestBtn")
-                          .attr("class", "btn_on"); 
-                    
-                    });
+      
             }
            
             startHere();
