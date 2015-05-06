@@ -420,7 +420,7 @@ ul {
     /*background-color: #F8F8F8;*/
 }
 
-#nav, #nav2, #nav3, #nav4 {
+#nav, #nav2, #nav3, #nav4 , #nav5{
     color: black;
 }
 
@@ -527,10 +527,25 @@ ul {
     font-size:12px;
 }
 
+.emissions_axis {
+    position:absolute;
+    top:100px;
+    fill:grey;
+    font-size: 12px;
+}
+
+.emissions_axis line{
+    height:10px;
+    stroke: grey;
+}
+
+.emissions_axis path {
+}
+
 .history_text, .history_text_bottom {
     position: absolute;
     margin-left: 0px;
-    padding-top: 10px;
+    
     padding-left: 15px;
     padding-right: 13px;
     width:270px;
@@ -542,11 +557,13 @@ ul {
 .history_text {
     margin-top: -195px;
     height:180px;
+    padding-top: 12px;
 }
 
 .history_text_bottom {
     margin-top: 0px;
     height: 220px;
+    padding-top: 7px;
 }
 
 .history_btn, .btn_on {
@@ -712,15 +729,25 @@ ul {
 }
 
 #sankey_basic {
-    margin-top: 80px;
+    margin-top: 50px;
     width:100%;
-    margin-bottom: 100px;
+    margin-bottom: 60px;
 }
 
 .sector_text {
     text-align: center;
     font-size: 15px;
     margin-top: 20px;
+}
+
+.sector_explain {
+    font-size:13px;
+    text-align: center;
+}
+
+.sector_legend {
+    font-size: 12px;
+    text-align: center;
 }
 
 
